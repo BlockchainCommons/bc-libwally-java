@@ -6,7 +6,7 @@ inline fun <reified T : Throwable> assertThrows(
 ): T {
     try {
         callable()
-        throw RuntimeException(msg)
+        throw AssertionError(msg)
     } catch (e: Throwable) {
         if (e is T) return e
         throw e
