@@ -36,7 +36,7 @@ Java_com_bc_libwally_bip32_Bip32Jni_bip32_1key_1from_1base58_1alloc(JNIEnv *env,
                                                                     jclass clazz,
                                                                     jstring base58) {
     const char *c_base58 = (*env)->GetStringUTFChars(env, base58, 0);
-    struct ext_key *output = (struct ext_key *) malloc(sizeof(struct ext_key));
+    struct ext_key *output = (struct ext_key *) calloc(1, sizeof(struct ext_key));
 
     int ret = bip32_key_from_base58_alloc(c_base58, &output);
     if (ret != WALLY_OK) {
@@ -46,7 +46,7 @@ Java_com_bc_libwally_bip32_Bip32Jni_bip32_1key_1from_1base58_1alloc(JNIEnv *env,
         return NULL;
     }
 
-    jobject result = to_jHDKey(env, output);
+    jobject result = to_jWallyHDKey(env, output);
 
     free(output);
     (*env)->ReleaseStringUTFChars(env, base58, c_base58);
@@ -77,11 +77,11 @@ Java_com_bc_libwally_bip32_Bip32Jni_bip32_1key_1from_1seed_1alloc(JNIEnv *env,
     }
 
     unsigned char *c_seed = to_unsigned_char_array(env, seed);
-    jint seed_len = (*env)->GetArrayLength(env, seed);
-    struct ext_key *output = (struct ext_key *) malloc(sizeof(struct ext_key));
+    jsize seed_len = (*env)->GetArrayLength(env, seed);
+    struct ext_key *output = (struct ext_key *) calloc(1, sizeof(struct ext_key));
 
     int ret = bip32_key_from_seed_alloc(c_seed,
-                                        seed_len,
+                                        (size_t) seed_len,
                                         (uint32_t) version,
                                         (uint32_t) flags,
                                         &output);
@@ -92,7 +92,7 @@ Java_com_bc_libwally_bip32_Bip32Jni_bip32_1key_1from_1seed_1alloc(JNIEnv *env,
         return NULL;
     }
 
-    jobject result = to_jHDKey(env, output);
+    jobject result = to_jWallyHDKey(env, output);
 
     free(c_seed);
     free(output);
@@ -115,7 +115,7 @@ Java_com_bc_libwally_bip32_Bip32Jni_bip32_1key_1to_1base58(JNIEnv *env,
         return NULL;
     }
 
-    struct ext_key *c_key = to_cHDKey(env, key);
+    struct ext_key *c_key = to_c_ext_key(env, key);
     char *output = "";
 
     int ret = bip32_key_to_base58(c_key, (uint32_t) flags, &output);
@@ -141,7 +141,7 @@ Java_com_bc_libwally_bip32_Bip32Jni_bip32_1key_1get_1fingerprint(JNIEnv *env,
         return NULL;
     }
 
-    struct ext_key *c_key = to_cHDKey(env, key);
+    struct ext_key *c_key = to_c_ext_key(env, key);
     unsigned char *c_output = (unsigned char *) calloc(BIP32_KEY_FINGERPRINT_LEN,
                                                        sizeof(unsigned char));
 
@@ -177,14 +177,14 @@ Java_com_bc_libwally_bip32_Bip32Jni_bip32_1key_1from_1parent_1path_1alloc(JNIEnv
         return NULL;
     }
 
-    struct ext_key *c_key = to_cHDKey(env, key);
+    struct ext_key *c_key = to_c_ext_key(env, key);
     uint32_t *c_child_path = to_uint32_t_array(env, child_path);
-    jint child_path_len = (*env)->GetArrayLength(env, child_path);
-    struct ext_key *output = malloc(sizeof(struct ext_key));
+    jsize child_path_len = (*env)->GetArrayLength(env, child_path);
+    struct ext_key *output = calloc(1, sizeof(struct ext_key));
 
     int ret = bip32_key_from_parent_path_alloc(c_key,
                                                c_child_path,
-                                               child_path_len,
+                                               (size_t) child_path_len,
                                                (uint32_t) flags,
                                                &output);
 
@@ -196,7 +196,7 @@ Java_com_bc_libwally_bip32_Bip32Jni_bip32_1key_1from_1parent_1path_1alloc(JNIEnv
         return NULL;
     }
 
-    jobject result = to_jHDKey(env, output);
+    jobject result = to_jWallyHDKey(env, output);
 
     free(c_key);
     free(c_child_path);

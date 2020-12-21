@@ -11,8 +11,8 @@ source scripts/helper.sh
 pushd ../deps/libwally-core
 ./tools/cleanup.sh
 ./tools/autogen.sh
-./configure --disable-swig-jav --enable-debug
-make
+./configure --disable-swig-java --enable-debug
+make install
 popd
 
 # Copy binary file

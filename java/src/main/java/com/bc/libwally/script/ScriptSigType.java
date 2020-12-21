@@ -4,7 +4,7 @@ import com.bc.libwally.address.PubKey;
 
 import java.util.Objects;
 
-public class ScriptSigType {
+public class ScriptSigType implements Cloneable {
     public enum Type {
         PAY_TO_PUBKEY_HASH, // P2PKH
         PAY_TO_SCRIPT_HASH_PAY_TO_WITNESS_PUBKEY_HASH // P2SH-P2WPKH
@@ -48,5 +48,10 @@ public class ScriptSigType {
     @Override
     public int hashCode() {
         return Objects.hash(type, pubKey);
+    }
+
+    @Override
+    protected ScriptSigType clone() throws CloneNotSupportedException {
+        return (ScriptSigType) super.clone();
     }
 }

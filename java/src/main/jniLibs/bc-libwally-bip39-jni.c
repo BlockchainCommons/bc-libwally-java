@@ -20,7 +20,7 @@ Java_com_bc_libwally_bip39_Bip39Jni_bip39_1get_1wordlist(JNIEnv *env, jclass cla
         c_lang = (*env)->GetStringUTFChars(env, lang, 0);
     }
 
-    bip39_words *output = (bip39_words *) malloc(sizeof(bip39_words));
+    bip39_words *output = (bip39_words *) calloc(1, sizeof(bip39_words));
 
     int ret = bip39_get_wordlist(c_lang, &output);
     if (ret != WALLY_OK) {
@@ -90,10 +90,10 @@ Java_com_bc_libwally_bip39_Bip39Jni_bip39_1mnemonic_1from_1bytes(JNIEnv *env,
     }
 
     unsigned char *c_bytes = (unsigned char *) to_unsigned_char_array(env, bytes);
-    jint byte_len = (*env)->GetArrayLength(env, bytes);
+    jsize byte_len = (*env)->GetArrayLength(env, bytes);
     char *output = "";
 
-    int ret = bip39_mnemonic_from_bytes(c_words, c_bytes, byte_len, &output);
+    int ret = bip39_mnemonic_from_bytes(c_words, c_bytes, (size_t) byte_len, &output);
     if (ret != WALLY_OK) {
         free(c_bytes);
         if (words != NULL)free(output);
@@ -121,7 +121,7 @@ Java_com_bc_libwally_bip39_Bip39Jni_bip39_1mnemonic_1to_1bytes(JNIEnv *env,
         return WALLY_ERROR;
     }
 
-    jint written_len = (*env)->GetArrayLength(env, written);
+    jsize written_len = (*env)->GetArrayLength(env, written);
     if (written_len != 1) {
         throw_new_bip39_exception(env, "written len must be 1");
         return WALLY_ERROR;
@@ -137,7 +137,7 @@ Java_com_bc_libwally_bip39_Bip39Jni_bip39_1mnemonic_1to_1bytes(JNIEnv *env,
     }
 
     const char *c_mnemonic = (*env)->GetStringUTFChars(env, mnemonic, 0);
-    jint output_len = (*env)->GetArrayLength(env, output);
+    jsize output_len = (*env)->GetArrayLength(env, output);
     unsigned char *c_output = calloc(output_len, sizeof(char));
     size_t c_written = 0;
 
@@ -171,7 +171,7 @@ Java_com_bc_libwally_bip39_Bip39Jni_bip39_1mnemonic_1to_1seed(JNIEnv *env,
         return WALLY_ERROR;
     }
 
-    jint written_len = (*env)->GetArrayLength(env, written);
+    jsize written_len = (*env)->GetArrayLength(env, written);
     if (written_len != 1) {
         throw_new_bip39_exception(env, "written len must be 1");
         return WALLY_ERROR;
@@ -179,7 +179,7 @@ Java_com_bc_libwally_bip39_Bip39Jni_bip39_1mnemonic_1to_1seed(JNIEnv *env,
 
     const char *c_mnemonic = (*env)->GetStringUTFChars(env, mnemonic, 0);
     const char *c_pass_phrase = (*env)->GetStringUTFChars(env, passphrase, 0);
-    jint output_len = (*env)->GetArrayLength(env, output);
+    jsize output_len = (*env)->GetArrayLength(env, output);
     unsigned char *c_output = calloc(output_len, sizeof(char));
     size_t c_written = 0;
 

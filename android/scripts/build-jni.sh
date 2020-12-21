@@ -11,7 +11,7 @@ source ../deps/libwally-core/tools/android_helpers.sh
 ARCH_LIST=$(android_get_arch_list)
 TOOLCHAIN_DIR=$(android_get_build_tools_dir)
 JNI_MD_DIR="darwin"
-JNI_LIBS=(bc-libwally-address-jni bc-libwally-bip32-jni bc-libwally-bip39-jni bc-libwally-crypto-jni bc-libwally-core-jni bc-libwally-script-jni)
+JNI_LIBS=(bc-libwally-address-jni bc-libwally-bip32-jni bc-libwally-bip39-jni bc-libwally-crypto-jni bc-libwally-core-jni bc-libwally-script-jni bc-libwally-tx-jni)
 LIBWALY_CORE_FILE=libwallycore.so
 
 if ! is_osx; then

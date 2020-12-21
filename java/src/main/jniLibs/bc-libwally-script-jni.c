@@ -20,10 +20,10 @@ Java_com_bc_libwally_script_ScriptJni_wally_1scriptpubkey_1get_1type(JNIEnv *env
     }
 
     unsigned char *c_bytes = to_unsigned_char_array(env, bytes);
-    jint bytes_len = (*env)->GetArrayLength(env, bytes);
+    jsize bytes_len = (*env)->GetArrayLength(env, bytes);
     size_t written = 0;
 
-    int ret = wally_scriptpubkey_get_type(c_bytes, bytes_len, &written);
+    int ret = wally_scriptpubkey_get_type(c_bytes, (size_t) bytes_len, &written);
     if (ret != WALLY_OK) {
         free(c_bytes);
         throw_new_script_exception(env, "wally_scriptpubkey_get_type error");
@@ -52,7 +52,7 @@ Java_com_bc_libwally_script_ScriptJni_wally_1scriptpubkey_1multisig_1from_1bytes
         return WALLY_ERROR;
     }
 
-    jint written_len = (*env)->GetArrayLength(env, written);
+    jsize written_len = (*env)->GetArrayLength(env, written);
     if (written_len != 1) {
         throw_new_script_exception(env, "written len must be 1");
         return WALLY_ERROR;
@@ -69,17 +69,17 @@ Java_com_bc_libwally_script_ScriptJni_wally_1scriptpubkey_1multisig_1from_1bytes
     }
 
     unsigned char *c_bytes = to_unsigned_char_array(env, bytes);
-    jint bytes_len = (*env)->GetArrayLength(env, bytes);
-    jint output_len = (*env)->GetArrayLength(env, output);
+    jsize bytes_len = (*env)->GetArrayLength(env, bytes);
+    jsize output_len = (*env)->GetArrayLength(env, output);
     unsigned char *c_output = (unsigned char *) calloc(output_len, sizeof(unsigned char));
     size_t c_written = 0;
 
     int ret = wally_scriptpubkey_multisig_from_bytes(c_bytes,
-                                                     bytes_len,
+                                                     (size_t) bytes_len,
                                                      (uint32_t) threshold,
                                                      (uint32_t) flags,
                                                      c_output,
-                                                     output_len,
+                                                     (size_t) output_len,
                                                      &c_written);
 
     if (ret != WALLY_OK) {
@@ -115,7 +115,7 @@ Java_com_bc_libwally_script_ScriptJni_wally_1witness_1program_1from_1bytes(JNIEn
         return WALLY_ERROR;
     }
 
-    jint written_len = (*env)->GetArrayLength(env, written);
+    jsize written_len = (*env)->GetArrayLength(env, written);
     if (written_len != 1) {
         throw_new_script_exception(env, "written len must be 1");
         return WALLY_ERROR;
@@ -128,16 +128,16 @@ Java_com_bc_libwally_script_ScriptJni_wally_1witness_1program_1from_1bytes(JNIEn
     }
 
     unsigned char *c_bytes = to_unsigned_char_array(env, bytes);
-    jint bytes_len = (*env)->GetArrayLength(env, bytes);
-    jint output_len = (*env)->GetArrayLength(env, output);
+    jsize bytes_len = (*env)->GetArrayLength(env, bytes);
+    jsize output_len = (*env)->GetArrayLength(env, output);
     unsigned char *c_output = (unsigned char *) calloc(output_len, sizeof(unsigned char));
     size_t c_written = 0;
 
     int ret = wally_witness_program_from_bytes(c_bytes,
-                                               bytes_len,
+                                               (size_t) bytes_len,
                                                (uint32_t) flags,
                                                c_output,
-                                               output_len,
+                                               (size_t) output_len,
                                                &c_written);
 
     if (ret != WALLY_OK) {

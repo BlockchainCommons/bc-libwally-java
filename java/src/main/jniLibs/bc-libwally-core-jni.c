@@ -19,7 +19,7 @@ Java_com_bc_libwally_core_CoreJni_wally_1hex_1from_1bytes(JNIEnv *env,
     }
 
     unsigned char *c_bytes = (unsigned char *) to_unsigned_char_array(env, bytes);
-    jint bytes_len = (*env)->GetArrayLength(env, bytes);
+    jsize bytes_len = (*env)->GetArrayLength(env, bytes);
     char *output = "";
 
     int ret = wally_hex_from_bytes(c_bytes, bytes_len, &output);
@@ -49,14 +49,14 @@ Java_com_bc_libwally_core_CoreJni_wally_1hex_1to_1bytes(JNIEnv *env,
         return WALLY_ERROR;
     }
 
-    jint written_len = (*env)->GetArrayLength(env, written);
+    jsize written_len = (*env)->GetArrayLength(env, written);
     if (written_len != 1) {
         throw_new_core_exception(env, "written len must be 1");
         return WALLY_ERROR;
     }
 
     unsigned char *c_output = (unsigned char *) to_unsigned_char_array(env, output);
-    jint output_len = (*env)->GetArrayLength(env, output);
+    jsize output_len = (*env)->GetArrayLength(env, output);
     const char *c_hex = (*env)->GetStringUTFChars(env, hex, 0);
     size_t c_written = 0;
 
@@ -92,7 +92,7 @@ Java_com_bc_libwally_core_CoreJni_wally_1base58_1from_1bytes(JNIEnv *env,
     }
 
     unsigned char *c_bytes = (unsigned char *) to_unsigned_char_array(env, bytes);
-    jint bytes_len = (*env)->GetArrayLength(env, bytes);
+    jsize bytes_len = (*env)->GetArrayLength(env, bytes);
     char *output = "";
 
     int ret = wally_base58_from_bytes(c_bytes, bytes_len, (uint32_t) flags, &output);
@@ -123,7 +123,7 @@ Java_com_bc_libwally_core_CoreJni_wally_1base58_1to_1bytes(JNIEnv *env,
         return WALLY_ERROR;
     }
 
-    jint written_len = (*env)->GetArrayLength(env, written);
+    jsize written_len = (*env)->GetArrayLength(env, written);
     if (written_len != 1) {
         throw_new_core_exception(env, "written len must be 1");
         return WALLY_ERROR;
@@ -135,7 +135,7 @@ Java_com_bc_libwally_core_CoreJni_wally_1base58_1to_1bytes(JNIEnv *env,
     }
 
     unsigned char *c_output = (unsigned char *) to_unsigned_char_array(env, output);
-    jint output_len = (*env)->GetArrayLength(env, output);
+    jsize output_len = (*env)->GetArrayLength(env, output);
     const char *c_base58 = (*env)->GetStringUTFChars(env, base58, 0);
     size_t c_written = 0;
 

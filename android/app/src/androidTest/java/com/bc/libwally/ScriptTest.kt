@@ -4,12 +4,12 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.bc.libwally.address.Address
 import com.bc.libwally.address.PubKey
 import com.bc.libwally.bip32.Network
+import com.bc.libwally.core.Core
+import com.bc.libwally.core.Core.bytes2Hex
 import com.bc.libwally.core.Core.hex2Bytes
 import com.bc.libwally.crypto.CryptoConstants.EC_SIGNATURE_DER_MAX_LOW_R_LEN
-import com.bc.libwally.script.ScriptPubKey
+import com.bc.libwally.script.*
 import com.bc.libwally.script.ScriptPubKey.ScriptType
-import com.bc.libwally.script.ScriptSig
-import com.bc.libwally.script.ScriptSigType
 import org.junit.Assert.*
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -69,7 +69,26 @@ class ScriptTest {
 
     @Test
     fun testWitnessP2WPKH() {
-        // TODO later after add Witness.createWallyStack()
+        val pubKey = PubKey(
+            "03501e454bf00751f24b1b489aa925215d66af2234e3891c3b21a52bedb3cd711c",
+            Network.MAINNET
+        )
+        val witness = Witness(WitnessType.payToWitnessPubKeyHash(pubKey))
+        assertTrue(witness.isDummy)
+
+        val stack = witness.createWallyTxWitnessStack()
+        assertEquals(2, stack.items.size.toLong())
+
+        assertEquals(
+            "76a914bef5a2f9a56a94aab12459f72ad9cf8cf19c7bbe88ac",
+            bytes2Hex(witness.scriptCode)
+        )
+        val signedWitness = Witness(
+            WitnessType.payToWitnessPubKeyHash(pubKey),
+            hex2Bytes("01")
+        )
+        val signedStack = signedWitness.createWallyTxWitnessStack()
+        assertEquals(2, signedStack.items.size.toLong())
     }
 
     @Test

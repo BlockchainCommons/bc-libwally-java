@@ -33,7 +33,7 @@ Java_com_bc_libwally_address_AddressJni_wally_1addr_1segwit_1to_1bytes(JNIEnv *e
         return WALLY_ERROR;
     }
 
-    jint written_len = (*env)->GetArrayLength(env, written);
+    jsize written_len = (*env)->GetArrayLength(env, written);
     if (written_len != 1) {
         throw_new_address_exception(env, "written len must be 1");
         return WALLY_ERROR;
@@ -76,7 +76,7 @@ Java_com_bc_libwally_address_AddressJni_wally_1address_1to_1scriptpubkey(JNIEnv 
         return WALLY_ERROR;
     }
 
-    jint written_len = (*env)->GetArrayLength(env, written);
+    jsize written_len = (*env)->GetArrayLength(env, written);
     if (written_len != 1) {
         throw_new_address_exception(env, "written len must be 1");
         return WALLY_ERROR;
@@ -88,7 +88,7 @@ Java_com_bc_libwally_address_AddressJni_wally_1address_1to_1scriptpubkey(JNIEnv 
     }
 
     const char *c_addr = (*env)->GetStringUTFChars(env, addr, 0);
-    jint output_len = (*env)->GetArrayLength(env, output);
+    jsize output_len = (*env)->GetArrayLength(env, output);
     unsigned char *c_output = calloc(output_len, sizeof(char));
     size_t c_written = 0;
 
@@ -125,7 +125,7 @@ Java_com_bc_libwally_address_AddressJni_wally_1bip32_1key_1to_1address(JNIEnv *e
         return NULL;
     }
 
-    struct ext_key *c_key = to_cHDKey(env, key);
+    struct ext_key *c_key = to_c_ext_key(env, key);
     char *output = "";
 
     int ret = wally_bip32_key_to_address(c_key, (uint32_t) flags, (uint32_t) version, &output);
@@ -154,7 +154,7 @@ Java_com_bc_libwally_address_AddressJni_wally_1bip32_1key_1to_1addr_1segwit(JNIE
         return NULL;
     }
 
-    struct ext_key *c_key = to_cHDKey(env, key);
+    struct ext_key *c_key = to_c_ext_key(env, key);
     const char *c_addr_family = (*env)->GetStringUTFChars(env, addr_family, 0);
     char *output = "";
 
@@ -193,7 +193,7 @@ Java_com_bc_libwally_address_AddressJni_wally_1scriptpubkey_1to_1address(JNIEnv 
 
     unsigned char *c_script_pubkey = (unsigned char *) to_unsigned_char_array(env,
                                                                               script_pub_key);
-    jint script_pubkey_len = (*env)->GetArrayLength(env, script_pub_key);
+    jsize script_pubkey_len = (*env)->GetArrayLength(env, script_pub_key);
     char *output = "";
 
     int ret = wally_scriptpubkey_to_address(c_script_pubkey,
@@ -225,12 +225,12 @@ Java_com_bc_libwally_address_AddressJni_wally_1addr_1segwit_1from_1bytes(JNIEnv 
     }
 
     unsigned char *c_bytes = (unsigned char *) to_unsigned_char_array(env, bytes);
-    jint bytes_len = (*env)->GetArrayLength(env, bytes);
+    jsize bytes_len = (*env)->GetArrayLength(env, bytes);
     const char *c_addr_family = (*env)->GetStringUTFChars(env, addr_family, 0);
     char *output = "";
 
     int ret = wally_addr_segwit_from_bytes(c_bytes,
-                                           bytes_len,
+                                           (size_t) bytes_len,
                                            c_addr_family,
                                            0,
                                            &output);
@@ -317,12 +317,12 @@ Java_com_bc_libwally_address_AddressJni_wally_1wif_1from_1bytes(JNIEnv *env,
     }
 
     unsigned char *c_prv_key = (unsigned char *) to_unsigned_char_array(env, priv_key);
-    jint prv_len = (*env)->GetArrayLength(env, priv_key);
+    jsize prv_len = (*env)->GetArrayLength(env, priv_key);
 
     char *output = "";
 
     int ret = wally_wif_from_bytes(c_prv_key,
-                                   prv_len,
+                                   (size_t) prv_len,
                                    (uint32_t) prefix,
                                    (uint32_t) flags,
                                    &output);

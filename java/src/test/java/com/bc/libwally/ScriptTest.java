@@ -2,9 +2,13 @@ package com.bc.libwally;
 
 import com.bc.libwally.address.Address;
 import com.bc.libwally.address.PubKey;
+import com.bc.libwally.bip32.Network;
 import com.bc.libwally.script.ScriptPubKey;
 import com.bc.libwally.script.ScriptSig;
 import com.bc.libwally.script.ScriptSigType;
+import com.bc.libwally.script.Witness;
+import com.bc.libwally.script.WitnessType;
+import com.bc.libwally.tx.WallyTxWitnessStack;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,6 +17,7 @@ import org.junit.runners.JUnit4;
 import static com.bc.libwally.ArrayUtils.append;
 import static com.bc.libwally.bip32.Network.MAINNET;
 import static com.bc.libwally.bip32.Network.TESTNET;
+import static com.bc.libwally.core.Core.bytes2Hex;
 import static com.bc.libwally.core.Core.hex2Bytes;
 import static com.bc.libwally.crypto.CryptoConstants.EC_SIGNATURE_DER_MAX_LOW_R_LEN;
 import static com.bc.libwally.script.ScriptPubKey.ScriptType.OP_RETURN;
@@ -23,6 +28,7 @@ import static com.bc.libwally.script.ScriptPubKey.ScriptType.PAY_TO_WITNESS_SCRI
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(JUnit4.class)
 public class ScriptTest {
@@ -79,7 +85,21 @@ public class ScriptTest {
 
     @Test
     public void testWitnessP2WPKH() {
-        // TODO later after add Witness.createWallyStack()
+        PubKey pubKey = new PubKey(
+                "03501e454bf00751f24b1b489aa925215d66af2234e3891c3b21a52bedb3cd711c",
+                Network.MAINNET);
+        Witness witness = new Witness(WitnessType.payToWitnessPubKeyHash(pubKey));
+        assertTrue(witness.isDummy());
+
+        WallyTxWitnessStack stack = witness.createWallyTxWitnessStack();
+        assertEquals(2, stack.getItems().length);
+
+        assertEquals("76a914bef5a2f9a56a94aab12459f72ad9cf8cf19c7bbe88ac",
+                     bytes2Hex(witness.getScriptCode()));
+        Witness signedWitness = new Witness(WitnessType.payToWitnessPubKeyHash(pubKey),
+                                            hex2Bytes("01"));
+        WallyTxWitnessStack signedStack = signedWitness.createWallyTxWitnessStack();
+        assertEquals(2, signedStack.getItems().length);
     }
 
     @Test

@@ -7,8 +7,9 @@ import static com.bc.libwally.ArrayUtils.append;
 import static com.bc.libwally.core.Core.hex2Bytes;
 import static com.bc.libwally.crypto.Crypto.hash160;
 import static com.bc.libwally.crypto.CryptoConstants.EC_SIGNATURE_DER_MAX_LOW_R_LEN;
+import static com.bc.libwally.tx.TxConstant.WALLY_SIGHASH_ALL;
 
-public class ScriptSig {
+public class ScriptSig implements Cloneable {
 
     public enum Purpose {
         SIGNED,
@@ -26,8 +27,7 @@ public class ScriptSig {
     public byte[] render(Purpose purpose) {
         switch (type.getType()) {
             case PAY_TO_PUBKEY_HASH:
-                // TODO change to WALLY_SIGHASH_ALL
-                byte[] sigHashBytes = new byte[]{0x01};
+                byte[] sigHashBytes = new byte[]{WALLY_SIGHASH_ALL};
                 byte[] lengthPushPubKey = new byte[]{(byte) type.getPubKey().getData().length};
                 byte[] pubKeyData = type.getPubKey().getData();
 
@@ -58,7 +58,8 @@ public class ScriptSig {
                 }
             case PAY_TO_SCRIPT_HASH_PAY_TO_WITNESS_PUBKEY_HASH:
                 byte[] pubKeyHashBytes = hash160(type.getPubKey().getData());
-                return append(hex2Bytes("0014"), pubKeyHashBytes);
+                byte[] redeemScript = append(hex2Bytes("0014"), pubKeyHashBytes);
+                return append(new byte[]{(byte) redeemScript.length}, redeemScript);
         }
 
         return null;
@@ -95,5 +96,10 @@ public class ScriptSig {
         int result = Objects.hash(type);
         result = 31 * result + Arrays.hashCode(signature);
         return result;
+    }
+
+    @Override
+    public ScriptSig clone() throws CloneNotSupportedException {
+        return (ScriptSig) super.clone();
     }
 }

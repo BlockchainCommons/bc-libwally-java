@@ -10,7 +10,7 @@ source scripts/helper.sh
 OUT_DIR=src/main/libs
 LIBWALLY_CORE_FILE=libwallycore.so
 JNI_MD_DIR="linux"
-JNI_LIBS=(bc-libwally-address-jni bc-libwally-bip32-jni bc-libwally-bip39-jni bc-libwally-crypto-jni bc-libwally-core-jni bc-libwally-script-jni)
+JNI_LIBS=(bc-libwally-address-jni bc-libwally-bip32-jni bc-libwally-bip39-jni bc-libwally-crypto-jni bc-libwally-core-jni bc-libwally-script-jni bc-libwally-tx-jni)
 
 if is_osx; then
   JNI_MD_DIR="darwin"

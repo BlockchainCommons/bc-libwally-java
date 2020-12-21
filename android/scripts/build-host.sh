@@ -40,11 +40,7 @@ for ARCH in $ARCH_LIST; do
   echo "Copying libwally-core binary file..."
   OUT_DIR=../../android/app/src/main/jniLibs/$ARCH
   mkdir -p "$OUT_DIR"
-  if is_osx; then
-    cp "$LIBWALLY_CORE_DIR/$LIBWALLY_CORE_FILE" "$OUT_DIR/$LIBWALLY_CORE_FILE"
-  else
-    find "$LIBWALLY_CORE_DIR" -name "$LIBWALLY_CORE_FILE*" -exec cp '{}' "$OUT_DIR" ';'
-  fi
+  find "$LIBWALLY_CORE_DIR" -name "$LIBWALLY_CORE_FILE*" -exec cp '{}' "$OUT_DIR" ';'
 
   echo "Done! $OUT_DIR/$LIBWALLY_CORE_FILE"
 

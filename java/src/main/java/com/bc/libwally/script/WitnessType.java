@@ -4,7 +4,7 @@ import com.bc.libwally.address.PubKey;
 
 import java.util.Objects;
 
-public class WitnessType {
+public class WitnessType implements Cloneable {
 
     public enum Type {
         PAY_TO_WITNESS_PUBKEY_HASH, // P2WPKH
@@ -49,5 +49,10 @@ public class WitnessType {
     @Override
     public int hashCode() {
         return Objects.hash(type, pubKey);
+    }
+
+    @Override
+    protected WitnessType clone() throws CloneNotSupportedException {
+        return (WitnessType) super.clone();
     }
 }

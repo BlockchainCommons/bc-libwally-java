@@ -26,7 +26,7 @@ import static com.bc.libwally.script.ScriptPubKey.ScriptType.PAY_TO_SCRIPT_HASH;
 import static com.bc.libwally.script.ScriptPubKey.ScriptType.PAY_TO_WITNESS_PUBKEY_HASH;
 import static com.bc.libwally.script.ScriptPubKey.ScriptType.PAY_TO_WITNESS_SCRIPT_HASH;
 
-public class ScriptPubKey {
+public class ScriptPubKey implements Cloneable {
 
     public enum ScriptType {
         OP_RETURN, // OP_RETURN
@@ -134,5 +134,10 @@ public class ScriptPubKey {
     @Override
     public int hashCode() {
         return Arrays.hashCode(data);
+    }
+
+    @Override
+    public ScriptPubKey clone() throws CloneNotSupportedException {
+        return (ScriptPubKey) super.clone();
     }
 }

@@ -1,5 +1,7 @@
 package com.bc.libwally.script;
 
+import com.bc.libwally.tx.WallyTxWitnessStack;
+
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -8,7 +10,7 @@ import static com.bc.libwally.core.Core.hex2Bytes;
 import static com.bc.libwally.crypto.Crypto.hash160;
 import static com.bc.libwally.crypto.CryptoConstants.EC_SIGNATURE_DER_MAX_LOW_R_LEN;
 
-public class Witness {
+public class Witness implements Cloneable {
 
     private final WitnessType type;
 
@@ -54,6 +56,10 @@ public class Witness {
         return dummy;
     }
 
+    public WallyTxWitnessStack createWallyTxWitnessStack() {
+        return WallyTxWitnessStack.create(this);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o)
@@ -71,5 +77,10 @@ public class Witness {
         int result = Objects.hash(type, dummy);
         result = 31 * result + Arrays.hashCode(signature);
         return result;
+    }
+
+    @Override
+    public Witness clone() throws CloneNotSupportedException {
+        return (Witness) super.clone();
     }
 }
