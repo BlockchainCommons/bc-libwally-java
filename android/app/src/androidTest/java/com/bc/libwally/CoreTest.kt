@@ -85,4 +85,18 @@ class CoreTest {
         )
         assertArrayEquals(expectedBytes, base582Bytes(base58))
     }
+
+    @Test
+    fun testBytes2Base64() {
+        val bytes = hex2Bytes("013af3d1a34bac2aa113ad2aabb2a2598013")
+        val expectedBase64 = "ATrz0aNLrCqhE60qq7KiWYAT"
+        assertEquals(expectedBase64, bytes2Base64(bytes))
+    }
+
+    @Test
+    fun testBase642Bytes() {
+        val base64 = "ATrz0aNLrCqhE60qq7KiWYAT"
+        val expectedBytes = hex2Bytes("013af3d1a34bac2aa113ad2aabb2a2598013")
+        assertArrayEquals(expectedBytes, base642Bytes(base64))
+    }
 }

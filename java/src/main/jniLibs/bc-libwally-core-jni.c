@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include <wally_core.h>
 #include "jni-utils.c"
+#include <ccan/ccan/base64/base64.h>
 
 // com/bc/libwally/core/CoreException
 static bool throw_new_core_exception(JNIEnv *env, char *msg) {
@@ -157,4 +158,65 @@ Java_com_bc_libwally_core_CoreJni_wally_1base58_1to_1bytes(JNIEnv *env,
     (*env)->ReleaseStringUTFChars(env, base58, c_base58);
 
     return WALLY_OK;
+}
+
+JNIEXPORT jstring JNICALL
+Java_com_bc_libwally_core_CoreJni_wally_1base64_1from_1bytes(JNIEnv *env,
+                                                             jclass clazz,
+                                                             jbyteArray bytes) {
+    if (bytes == NULL) {
+        throw_new_core_exception(env, "bytes is NULL");
+        return NULL;
+    }
+
+    unsigned char *c_bytes = to_unsigned_char_array(env, bytes);
+    jsize bytes_len = (*env)->GetArrayLength(env, bytes);
+    size_t output_len = base64_encoded_length(bytes_len);
+    char *output = (char *) calloc(bytes_len, sizeof(char));
+
+    size_t written = base64_encode(output, output_len, (char *) c_bytes, bytes_len);
+    if (written == 0 || written > output_len) {
+        free(c_bytes);
+        free(output);
+        throw_new_core_exception(env, "base64_encode error");
+        return NULL;
+    }
+
+    char *c_result = (char *) calloc(written, sizeof(char));
+    memcpy(c_result, output, written);
+
+    jstring result = (*env)->NewStringUTF(env, c_result);
+
+    free(c_bytes);
+    free(output);
+    free(c_result);
+
+    return result;
+
+}
+
+JNIEXPORT jbyteArray JNICALL
+Java_com_bc_libwally_core_CoreJni_wally_1base64_1to_1bytes(JNIEnv *env,
+                                                           jclass clazz,
+                                                           jstring base64) {
+
+    const char *c_base64 = (*env)->GetStringUTFChars(env, base64, 0);
+    size_t base64_len = strlen(c_base64);
+    size_t output_len = base64_decoded_length(base64_len);
+    char *output = (char *) calloc(output_len, sizeof(char));
+
+    size_t written = base64_decode(output, output_len, c_base64, base64_len);
+    if (written == 0 || written > output_len) {
+        (*env)->ReleaseStringUTFChars(env, base64, c_base64);
+        free(output);
+        throw_new_core_exception(env, "base64_decode error");
+        return NULL;
+    }
+
+    jbyteArray result = create_jbyteArray(env, (unsigned char *) output, output_len);
+
+    (*env)->ReleaseStringUTFChars(env, base64, c_base64);
+    free(output);
+
+    return result;
 }

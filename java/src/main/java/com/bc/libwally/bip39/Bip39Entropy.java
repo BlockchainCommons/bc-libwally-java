@@ -2,6 +2,7 @@ package com.bc.libwally.bip39;
 
 import java.util.Arrays;
 
+import static com.bc.libwally.ArrayUtils.slice;
 import static com.bc.libwally.core.Core.bytes2Hex;
 import static com.bc.libwally.core.Core.hex2Bytes;
 
@@ -16,7 +17,7 @@ public class Bip39Entropy {
     public Bip39Entropy(byte[] data, Integer len) {
         if (data == null || data.length == 0)
             throw new Bip39Exception("invalid data");
-        this.data = len != null ? Arrays.copyOfRange(data, 0, len) : data;
+        this.data = len != null ? slice(data, len) : data;
     }
 
     public Bip39Entropy(byte[] data) {

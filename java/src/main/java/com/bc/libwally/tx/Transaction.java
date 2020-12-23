@@ -41,6 +41,13 @@ public class Transaction {
 
     private final WallyTx tx;
 
+    public Transaction(WallyTx tx) {
+        this.tx = tx;
+        this.hash = null;
+        this.inputs = null;
+        this.outputs = null;
+    }
+
     public Transaction(String hex) {
         inputs = null;
         outputs = null;

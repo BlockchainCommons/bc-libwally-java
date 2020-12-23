@@ -5,7 +5,9 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import static com.bc.libwally.core.Core.base582Bytes;
+import static com.bc.libwally.core.Core.base642Bytes;
 import static com.bc.libwally.core.Core.bytes2Base58;
+import static com.bc.libwally.core.Core.bytes2Base64;
 import static com.bc.libwally.core.Core.bytes2Hex;
 import static com.bc.libwally.core.Core.hex2Bytes;
 import static org.junit.Assert.assertArrayEquals;
@@ -81,6 +83,20 @@ public class CoreTest {
                                           0x45,
                                           0x00};
         assertArrayEquals(expectedBytes, base582Bytes(base58));
+    }
+
+    @Test
+    public void testBytes2Base64() {
+        byte[] bytes = hex2Bytes("013af3d1a34bac2aa113ad2aabb2a2598013");
+        String expectedBase64 = "ATrz0aNLrCqhE60qq7KiWYAT";
+        assertEquals(expectedBase64, bytes2Base64(bytes));
+    }
+
+    @Test
+    public void testBase642Bytes() {
+        String base64 = "ATrz0aNLrCqhE60qq7KiWYAT";
+        byte[] expectedBytes = hex2Bytes("013af3d1a34bac2aa113ad2aabb2a2598013");
+        assertArrayEquals(expectedBytes, base642Bytes(base64));
     }
 
 }

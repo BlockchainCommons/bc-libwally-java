@@ -4,6 +4,7 @@ import com.bc.libwally.address.PubKey;
 
 import java.util.Arrays;
 
+import static com.bc.libwally.ArrayUtils.slice;
 import static com.bc.libwally.WallyConstant.WALLY_OK;
 import static com.bc.libwally.core.Core.bytes2Hex;
 import static com.bc.libwally.core.Core.hex2Bytes;
@@ -40,7 +41,7 @@ public class ScriptPubKey implements Cloneable {
     private final byte[] data;
 
     public ScriptPubKey(byte[] data, Integer len) {
-        this.data = len != null ? Arrays.copyOfRange(data, 0, len) : data;
+        this.data = len != null ? slice(data, len) : data;
     }
 
     public ScriptPubKey(byte[] data) {
@@ -74,7 +75,7 @@ public class ScriptPubKey implements Cloneable {
             throw new ScriptException("wally_scriptpubkey_multisig_from_bytes error");
         }
 
-        this.data = Arrays.copyOfRange(scriptBytes, 0, written[0]);
+        this.data = slice(scriptBytes, written[0]);
     }
 
     public ScriptPubKey(PubKey[] pubKeys, long threshold) {
@@ -118,7 +119,7 @@ public class ScriptPubKey implements Cloneable {
             throw new ScriptException("wally_witness_program_from_bytes error");
         }
 
-        return Arrays.copyOfRange(scriptByte, 0, written[0]);
+        return slice(scriptByte, written[0]);
     }
 
     @Override

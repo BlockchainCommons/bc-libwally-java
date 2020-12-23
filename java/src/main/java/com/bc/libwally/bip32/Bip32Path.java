@@ -22,10 +22,11 @@ public class Bip32Path {
             throw new Bip32Exception("invalid raw path");
         Bip32Derivation[] components = new Bip32Derivation[rawPath.length];
         for (int i = 0; i < rawPath.length; i++) {
-            if (i < BIP32_INITIAL_HARDENED_CHILD) {
-                components[i] = Bip32Derivation.newNormal(i);
+            long index = rawPath[i];
+            if (index < BIP32_INITIAL_HARDENED_CHILD) {
+                components[i] = Bip32Derivation.newNormal(index);
             } else {
-                components[i] = Bip32Derivation.newHardened(i - BIP32_INITIAL_HARDENED_CHILD);
+                components[i] = Bip32Derivation.newHardened(index - BIP32_INITIAL_HARDENED_CHILD);
             }
         }
 

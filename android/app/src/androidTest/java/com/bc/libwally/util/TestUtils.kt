@@ -1,7 +1,7 @@
 package com.bc.libwally.util
 
 inline fun <reified T : Throwable> assertThrows(
-    msg: String?,
+    msg: String = "",
     callable: () -> Unit
 ): T {
     try {

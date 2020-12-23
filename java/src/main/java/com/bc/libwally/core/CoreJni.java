@@ -16,4 +16,8 @@ class CoreJni {
                                             long flags,
                                             byte[] output,
                                             int[] written);
+
+    static native String wally_base64_from_bytes(byte[] bytes);
+
+    static native byte[] wally_base64_to_bytes(String base64);
 }

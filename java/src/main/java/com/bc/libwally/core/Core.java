@@ -1,12 +1,13 @@
 package com.bc.libwally.core;
 
-import java.util.Arrays;
-
+import static com.bc.libwally.ArrayUtils.slice;
 import static com.bc.libwally.WallyConstant.WALLY_OK;
 import static com.bc.libwally.core.CoreConstant.BASE58_CHECKSUM_LEN;
 import static com.bc.libwally.core.CoreConstant.BASE58_FLAG_CHECKSUM;
 import static com.bc.libwally.core.CoreJni.wally_base58_from_bytes;
 import static com.bc.libwally.core.CoreJni.wally_base58_to_bytes;
+import static com.bc.libwally.core.CoreJni.wally_base64_from_bytes;
+import static com.bc.libwally.core.CoreJni.wally_base64_to_bytes;
 import static com.bc.libwally.core.CoreJni.wally_hex_from_bytes;
 import static com.bc.libwally.core.CoreJni.wally_hex_to_bytes;
 
@@ -25,7 +26,7 @@ public class Core {
             throw new CoreException("wally_hex_to_bytes error");
         }
 
-        return Arrays.copyOfRange(output, 0, written[0]);
+        return slice(output, written[0]);
     }
 
     public static String bytes2Base58(byte[] bytes) {
@@ -40,6 +41,14 @@ public class Core {
             throw new CoreException("wally_base58_to_bytes error");
         }
 
-        return Arrays.copyOfRange(output, 0, written[0]);
+        return slice(output, written[0]);
+    }
+
+    public static String bytes2Base64(byte[] bytes) {
+        return wally_base64_from_bytes(bytes);
+    }
+
+    public static byte[] base642Bytes(String base64) {
+        return wally_base64_to_bytes(base64);
     }
 }

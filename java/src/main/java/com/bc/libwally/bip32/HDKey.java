@@ -6,6 +6,7 @@ import com.bc.libwally.bip39.Bip39Seed;
 
 import java.util.Arrays;
 
+import static com.bc.libwally.ArrayUtils.slice;
 import static com.bc.libwally.bip32.Bip32Constant.BIP32_FLAG_KEY_PRIVATE;
 import static com.bc.libwally.bip32.Bip32Constant.BIP32_FLAG_KEY_PUBLIC;
 import static com.bc.libwally.bip32.Bip32Constant.BIP32_VER_MAIN_PRIVATE;
@@ -99,7 +100,7 @@ public class HDKey {
             return null;
 
         // skip prefix byte 0
-        byte[] data = Arrays.copyOfRange(key.getPrivKey(), 1, key.getPrivKey().length);
+        byte[] data = slice(key.getPrivKey(), 1, key.getPrivKey().length);
 
         return new Key(data, getNetwork(), true);
     }
