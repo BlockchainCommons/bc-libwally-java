@@ -4,6 +4,7 @@ import com.bc.libwally.script.ScriptPubKey;
 import com.bc.libwally.script.ScriptSig;
 import com.bc.libwally.script.ScriptSigType;
 import com.bc.libwally.script.Witness;
+import com.bc.libwally.tx.raw.WallyTxInput;
 
 import static com.bc.libwally.tx.TxJni.wally_tx_input_init_alloc;
 

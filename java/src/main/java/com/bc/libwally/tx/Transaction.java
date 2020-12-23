@@ -3,9 +3,12 @@ package com.bc.libwally.tx;
 import com.bc.libwally.bip32.HDKey;
 import com.bc.libwally.script.ScriptSig;
 import com.bc.libwally.script.Witness;
+import com.bc.libwally.tx.raw.WallyTx;
+import com.bc.libwally.tx.raw.WallyTxWitnessStack;
 
 import java.util.Arrays;
 
+import static com.bc.libwally.ArrayUtils.append;
 import static com.bc.libwally.ArrayUtils.reversed;
 import static com.bc.libwally.ArrayUtils.slice;
 import static com.bc.libwally.WallyConstant.WALLY_OK;
@@ -22,6 +25,7 @@ import static com.bc.libwally.tx.TxConstant.WALLY_SIGHASH_ALL;
 import static com.bc.libwally.tx.TxConstant.WALLY_TX_FLAG_USE_WITNESS;
 import static com.bc.libwally.tx.TxJni.wally_tx_add_input;
 import static com.bc.libwally.tx.TxJni.wally_tx_add_output;
+import static com.bc.libwally.tx.TxJni.wally_tx_clone_alloc;
 import static com.bc.libwally.tx.TxJni.wally_tx_from_bytes;
 import static com.bc.libwally.tx.TxJni.wally_tx_get_btc_signature_hash;
 import static com.bc.libwally.tx.TxJni.wally_tx_get_total_output_satoshi;
@@ -30,6 +34,8 @@ import static com.bc.libwally.tx.TxJni.wally_tx_init_alloc;
 import static com.bc.libwally.tx.TxJni.wally_tx_set_input_script;
 import static com.bc.libwally.tx.TxJni.wally_tx_set_input_witness;
 import static com.bc.libwally.tx.TxJni.wally_tx_to_hex;
+import static com.bc.libwally.tx.TxJni.wally_tx_witness_stack_init_alloc;
+import static com.bc.libwally.tx.TxJni.wally_tx_witness_stack_set;
 
 public class Transaction {
 
@@ -40,6 +46,14 @@ public class Transaction {
     private final TxOutput[] outputs;
 
     private final WallyTx tx;
+
+    public static WallyTxWitnessStack createWallyTxWitnessStack(Witness witness) {
+        WallyTxWitnessStack stack = wally_tx_witness_stack_init_alloc(2);
+        byte[] sigHashBytes = new byte[]{WALLY_SIGHASH_ALL};
+        stack = wally_tx_witness_stack_set(stack, 0, append(witness.getSignature(), sigHashBytes));
+        stack = wally_tx_witness_stack_set(stack, 1, witness.getType().getPubKey().getData());
+        return stack;
+    }
 
     public Transaction(WallyTx tx) {
         this.tx = tx;
@@ -132,7 +146,7 @@ public class Transaction {
         if (tx == null)
             return null;
 
-        WallyTx tx = this.tx.nativeClone();
+        WallyTx tx = nativeCloneTx();
 
         // Set scriptSig for all unsigned inputs to FEE_WORST_CASE
         for (int i = 0; i < inputs.length; i++) {
@@ -178,7 +192,7 @@ public class Transaction {
         }
 
         try {
-            WallyTx clonedTx = tx.nativeClone();
+            WallyTx clonedTx = nativeCloneTx();
             TxInput[] inputs = cloneInputs(this.inputs);
 
             for (int i = 0; i < inputs.length; i++) {
@@ -287,6 +301,10 @@ public class Transaction {
             cloned[i] = inputs[i].clone();
         }
         return cloned;
+    }
+
+    private WallyTx nativeCloneTx() {
+        return wally_tx_clone_alloc(tx, 0);
     }
 
     public byte[] getHash() {

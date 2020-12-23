@@ -256,7 +256,8 @@ static struct ext_key *to_c_ext_key(JNIEnv *env, jobject jHDKey) {
 // -------------- Tx JNI methods -----------------------//
 
 static jobject to_jWallyTxWitnessItem(JNIEnv *env, struct wally_tx_witness_item *item) {
-    jclass clazz = find_jclass(env, "com/bc/libwally/tx/WallyTxWitnessStack$WallyTxWitnessItem");
+    jclass clazz = find_jclass(env,
+                               "com/bc/libwally/tx/raw/WallyTxWitnessStack$WallyTxWitnessItem");
     if (clazz == NULL) {
         return NULL;
     }
@@ -272,7 +273,8 @@ static jobject to_jWallyTxWitnessItem(JNIEnv *env, struct wally_tx_witness_item 
 
 static struct wally_tx_witness_item *
 to_c_wally_tx_witness_item(JNIEnv *env, jobject jWallyTxWitnessItem) {
-    jclass clazz = find_jclass(env, "com/bc/libwally/tx/WallyTxWitnessStack$WallyTxWitnessItem");
+    jclass clazz = find_jclass(env,
+                               "com/bc/libwally/tx/raw/WallyTxWitnessStack$WallyTxWitnessItem");
     if (clazz == NULL) {
         return NULL;
     }
@@ -299,7 +301,7 @@ to_c_wally_tx_witness_item(JNIEnv *env, jobject jWallyTxWitnessItem) {
 }
 
 static jobject to_jWallyTxWitnessStack(JNIEnv *env, struct wally_tx_witness_stack *stack) {
-    jclass stack_clazz = find_jclass(env, "com/bc/libwally/tx/WallyTxWitnessStack");
+    jclass stack_clazz = find_jclass(env, "com/bc/libwally/tx/raw/WallyTxWitnessStack");
     if (stack_clazz == NULL) {
         return NULL;
     }
@@ -307,13 +309,13 @@ static jobject to_jWallyTxWitnessStack(JNIEnv *env, struct wally_tx_witness_stac
     jmethodID constructor_stack_mid = get_methodID(env,
                                                    stack_clazz,
                                                    "<init>",
-                                                   "([Lcom/bc/libwally/tx/WallyTxWitnessStack$WallyTxWitnessItem;I)V");
+                                                   "([Lcom/bc/libwally/tx/raw/WallyTxWitnessStack$WallyTxWitnessItem;I)V");
     if (constructor_stack_mid == NULL) {
         return NULL;
     }
 
     jclass item_clazz = find_jclass(env,
-                                    "com/bc/libwally/tx/WallyTxWitnessStack$WallyTxWitnessItem");
+                                    "com/bc/libwally/tx/raw/WallyTxWitnessStack$WallyTxWitnessItem");
     if (item_clazz == NULL) {
         return NULL;
     }
@@ -345,7 +347,7 @@ static jobject to_jWallyTxWitnessStack(JNIEnv *env, struct wally_tx_witness_stac
 
 static struct wally_tx_witness_stack *
 to_c_wally_tx_witness_stack(JNIEnv *env, jobject jWallyTxWitnessStack) {
-    jclass clazz = find_jclass(env, "com/bc/libwally/tx/WallyTxWitnessStack");
+    jclass clazz = find_jclass(env, "com/bc/libwally/tx/raw/WallyTxWitnessStack");
     if (clazz == NULL) {
         return NULL;
     }
@@ -353,7 +355,7 @@ to_c_wally_tx_witness_stack(JNIEnv *env, jobject jWallyTxWitnessStack) {
     jmethodID get_tx_witness_item_mid = get_methodID(env,
                                                      clazz,
                                                      "getItems",
-                                                     "()[Lcom/bc/libwally/tx/WallyTxWitnessStack$WallyTxWitnessItem;");
+                                                     "()[Lcom/bc/libwally/tx/raw/WallyTxWitnessStack$WallyTxWitnessItem;");
 
     // get values from Java object
     jobjectArray j_items = (jobjectArray) (*env)->CallObjectMethod(env,
@@ -384,7 +386,7 @@ to_c_wally_tx_witness_stack(JNIEnv *env, jobject jWallyTxWitnessStack) {
 }
 
 static jobject to_jWallyTxOutput(JNIEnv *env, struct wally_tx_output *output) {
-    jclass clazz = find_jclass(env, "com/bc/libwally/tx/WallyTxOutput");
+    jclass clazz = find_jclass(env, "com/bc/libwally/tx/raw/WallyTxOutput");
     if (clazz == NULL) {
         return NULL;
     }
@@ -406,7 +408,7 @@ static jobject to_jWallyTxOutput(JNIEnv *env, struct wally_tx_output *output) {
 }
 
 static struct wally_tx_output *to_c_wally_tx_output(JNIEnv *env, jobject jWallyTxOutput) {
-    jclass clazz = find_jclass(env, "com/bc/libwally/tx/WallyTxOutput");
+    jclass clazz = find_jclass(env, "com/bc/libwally/tx/raw/WallyTxOutput");
     if (clazz == NULL) {
         return NULL;
     }
@@ -434,7 +436,7 @@ static struct wally_tx_output *to_c_wally_tx_output(JNIEnv *env, jobject jWallyT
 }
 
 static jobject to_jWallyTxInput(JNIEnv *env, struct wally_tx_input *input) {
-    jclass clazz = find_jclass(env, "com/bc/libwally/tx/WallyTxInput");
+    jclass clazz = find_jclass(env, "com/bc/libwally/tx/raw/WallyTxInput");
     if (clazz == NULL) {
         return NULL;
     }
@@ -442,7 +444,7 @@ static jobject to_jWallyTxInput(JNIEnv *env, struct wally_tx_input *input) {
     jmethodID constructor_mid = get_methodID(env,
                                              clazz,
                                              "<init>",
-                                             "([BJJ[BLcom/bc/libwally/tx/WallyTxWitnessStack;S)V");
+                                             "([BJJ[BLcom/bc/libwally/tx/raw/WallyTxWitnessStack;S)V");
     if (constructor_mid == NULL) {
         return NULL;
     }
@@ -476,7 +478,7 @@ static jobject to_jWallyTxInput(JNIEnv *env, struct wally_tx_input *input) {
 }
 
 static struct wally_tx_input *to_c_wally_tx_input(JNIEnv *env, jobject jWallyTxInput) {
-    jclass clazz = find_jclass(env, "com/bc/libwally/tx/WallyTxInput");
+    jclass clazz = find_jclass(env, "com/bc/libwally/tx/raw/WallyTxInput");
     if (clazz == NULL) {
         return NULL;
     }
@@ -497,7 +499,7 @@ static struct wally_tx_input *to_c_wally_tx_input(JNIEnv *env, jobject jWallyTxI
     jmethodID get_witness_mid = get_methodID(env,
                                              clazz,
                                              "getWitness",
-                                             "()Lcom/bc/libwally/tx/WallyTxWitnessStack;");
+                                             "()Lcom/bc/libwally/tx/raw/WallyTxWitnessStack;");
     jobject j_witness = (*env)->CallObjectMethod(env, jWallyTxInput, get_witness_mid);
     jmethodID get_features_mid = get_methodID(env, clazz, "getFeatures", "()S");
     jshort j_features = (*env)->CallShortMethod(env, jWallyTxInput, get_features_mid);
@@ -534,7 +536,7 @@ static struct wally_tx_input *to_c_wally_tx_input(JNIEnv *env, jobject jWallyTxI
 }
 
 static jobject to_jWallyTx(JNIEnv *env, struct wally_tx *tx) {
-    jclass wally_tx_clazz = find_jclass(env, "com/bc/libwally/tx/WallyTx");
+    jclass wally_tx_clazz = find_jclass(env, "com/bc/libwally/tx/raw/WallyTx");
     if (wally_tx_clazz == NULL) {
         return NULL;
     }
@@ -543,19 +545,19 @@ static jobject to_jWallyTx(JNIEnv *env, struct wally_tx *tx) {
                                                       wally_tx_clazz,
                                                       "<init>",
                                                       "(JJ"
-                                                      "[Lcom/bc/libwally/tx/WallyTxInput;"
-                                                      "[Lcom/bc/libwally/tx/WallyTxOutput;"
+                                                      "[Lcom/bc/libwally/tx/raw/WallyTxInput;"
+                                                      "[Lcom/bc/libwally/tx/raw/WallyTxOutput;"
                                                       "II)V");
     if (wally_tx_constructor_mid == NULL) {
         return NULL;
     }
 
-    jclass wally_tx_input_clazz = find_jclass(env, "com/bc/libwally/tx/WallyTxInput");
+    jclass wally_tx_input_clazz = find_jclass(env, "com/bc/libwally/tx/raw/WallyTxInput");
     if (wally_tx_input_clazz == NULL) {
         return NULL;
     }
 
-    jclass wally_tx_output_clazz = find_jclass(env, "com/bc/libwally/tx/WallyTxOutput");
+    jclass wally_tx_output_clazz = find_jclass(env, "com/bc/libwally/tx/raw/WallyTxOutput");
     if (wally_tx_output_clazz == NULL) {
         return NULL;
     }
@@ -598,7 +600,7 @@ static jobject to_jWallyTx(JNIEnv *env, struct wally_tx *tx) {
 }
 
 static struct wally_tx *to_c_wally_tx(JNIEnv *env, jobject jWallyTx) {
-    jclass clazz = find_jclass(env, "com/bc/libwally/tx/WallyTx");
+    jclass clazz = find_jclass(env, "com/bc/libwally/tx/raw/WallyTx");
     if (clazz == NULL) {
         return NULL;
     }
@@ -611,12 +613,12 @@ static struct wally_tx *to_c_wally_tx(JNIEnv *env, jobject jWallyTx) {
     jmethodID get_inputs_mid = get_methodID(env,
                                             clazz,
                                             "getInputs",
-                                            "()[Lcom/bc/libwally/tx/WallyTxInput;");
+                                            "()[Lcom/bc/libwally/tx/raw/WallyTxInput;");
     jobjectArray j_inputs = (jobjectArray) (*env)->CallObjectMethod(env, jWallyTx, get_inputs_mid);
     jmethodID get_outputs_mid = get_methodID(env,
                                              clazz,
                                              "getOutputs",
-                                             "()[Lcom/bc/libwally/tx/WallyTxOutput;");
+                                             "()[Lcom/bc/libwally/tx/raw/WallyTxOutput;");
     jobjectArray j_outputs = (jobjectArray) (*env)->CallObjectMethod(env,
                                                                      jWallyTx,
                                                                      get_outputs_mid);
@@ -802,10 +804,10 @@ static jobject to_jWallyPsbtInput(JNIEnv *env, struct wally_psbt_input *input) {
     jmethodID constructor_mid = get_methodID(env,
                                              clazz,
                                              "<init>",
-                                             "(Lcom/bc/libwally/tx/WallyTx;"
-                                             "Lcom/bc/libwally/tx/WallyTxOutput;"
+                                             "(Lcom/bc/libwally/tx/raw/WallyTx;"
+                                             "Lcom/bc/libwally/tx/raw/WallyTxOutput;"
                                              "[B[B[B"
-                                             "Lcom/bc/libwally/tx/WallyTxWitnessStack;"
+                                             "Lcom/bc/libwally/tx/raw/WallyTxWitnessStack;"
                                              "Lcom/bc/libwally/psbt/raw/WallyMap;"
                                              "Lcom/bc/libwally/psbt/raw/WallyMap;"
                                              "Lcom/bc/libwally/psbt/raw/WallyMap;)V");
@@ -839,7 +841,6 @@ static jobject to_jWallyPsbtInput(JNIEnv *env, struct wally_psbt_input *input) {
 
     jbyteArray j_final_script = NULL;
     if (input->final_scriptsig != NULL) {
-        fprintf(stdout, "input->final_scriptsig\n");
         j_final_script = create_jbyteArray(env,
                                            input->final_scriptsig,
                                            input->final_scriptsig_len);
@@ -847,7 +848,6 @@ static jobject to_jWallyPsbtInput(JNIEnv *env, struct wally_psbt_input *input) {
 
     jobject j_final_witness = NULL;
     if (input->final_witness != NULL) {
-        fprintf(stdout, "input->final_witness\n");
         j_final_witness = to_jWallyTxWitnessStack(env, input->final_witness);
     }
 
@@ -876,13 +876,16 @@ static struct wally_psbt_input *to_c_wally_psbt_input(JNIEnv *env, jobject jWall
     }
 
     // get values from Java object
-    jmethodID get_utxo_mid = get_methodID(env, clazz, "getUtxo", "()Lcom/bc/libwally/tx/WallyTx;");
+    jmethodID get_utxo_mid = get_methodID(env,
+                                          clazz,
+                                          "getUtxo",
+                                          "()Lcom/bc/libwally/tx/raw/WallyTx;");
     jobject j_utxo = (*env)->CallObjectMethod(env, jWallyPsbtInput, get_utxo_mid);
 
     jmethodID get_witness_utxo_mid = get_methodID(env,
                                                   clazz,
                                                   "getWitnessUtxo",
-                                                  "()Lcom/bc/libwally/tx/WallyTxOutput;");
+                                                  "()Lcom/bc/libwally/tx/raw/WallyTxOutput;");
     jobject j_witness_utxo = (*env)->CallObjectMethod(env, jWallyPsbtInput, get_witness_utxo_mid);
 
     jmethodID get_redeem_script_mid = get_methodID(env, clazz, "getRedeemScript", "()[B");
@@ -903,7 +906,7 @@ static struct wally_psbt_input *to_c_wally_psbt_input(JNIEnv *env, jobject jWall
     jmethodID get_final_witness_mid = get_methodID(env,
                                                    clazz,
                                                    "getFinalWitness",
-                                                   "()Lcom/bc/libwally/tx/WallyTxWitnessStack;");
+                                                   "()Lcom/bc/libwally/tx/raw/WallyTxWitnessStack;");
     jobject j_final_witness = (*env)->CallObjectMethod(env, jWallyPsbtInput, get_final_witness_mid);
 
     jmethodID get_key_paths_mid = get_methodID(env,
@@ -1074,7 +1077,7 @@ static jobject to_jWallyPsbt(JNIEnv *env, struct wally_psbt *psbt) {
     }
 
     jmethodID psbt_constructor_mid = get_methodID(env, psbt_clazz, "<init>", "([B"
-                                                                             "Lcom/bc/libwally/tx/WallyTx;"
+                                                                             "Lcom/bc/libwally/tx/raw/WallyTx;"
                                                                              "[Lcom/bc/libwally/psbt/raw/WallyPsbtInput;"
                                                                              "I"
                                                                              "[Lcom/bc/libwally/psbt/raw/WallyPsbtOutput;"
@@ -1151,7 +1154,7 @@ static struct wally_psbt *to_c_wally_psbt(JNIEnv *env, jobject jWallyPsbt) {
     // get values from Java object
     jmethodID get_magic_mid = get_methodID(env, clazz, "getMagic", "()[B");
     jbyteArray j_magic = (jbyteArray) (*env)->CallObjectMethod(env, jWallyPsbt, get_magic_mid);
-    jmethodID get_tx_mid = get_methodID(env, clazz, "getTx", "()Lcom/bc/libwally/tx/WallyTx;");
+    jmethodID get_tx_mid = get_methodID(env, clazz, "getTx", "()Lcom/bc/libwally/tx/raw/WallyTx;");
     jobject j_tx = (*env)->CallObjectMethod(env, jWallyPsbt, get_tx_mid);
     jmethodID get_inputs_mid = get_methodID(env,
                                             clazz,

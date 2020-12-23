@@ -3,6 +3,7 @@ package com.bc.libwally.tx;
 import com.bc.libwally.address.Address;
 import com.bc.libwally.bip32.Network;
 import com.bc.libwally.script.ScriptPubKey;
+import com.bc.libwally.tx.raw.WallyTxOutput;
 
 import static com.bc.libwally.tx.TxJni.wally_tx_output_init_alloc;
 

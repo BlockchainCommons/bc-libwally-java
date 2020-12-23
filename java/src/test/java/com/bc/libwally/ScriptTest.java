@@ -8,7 +8,7 @@ import com.bc.libwally.script.ScriptSig;
 import com.bc.libwally.script.ScriptSigType;
 import com.bc.libwally.script.Witness;
 import com.bc.libwally.script.WitnessType;
-import com.bc.libwally.tx.WallyTxWitnessStack;
+import com.bc.libwally.tx.raw.WallyTxWitnessStack;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

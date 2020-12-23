@@ -1,7 +1,7 @@
 package com.bc.libwally.psbt;
 
 import com.bc.libwally.psbt.raw.WallyPsbt;
-import com.bc.libwally.tx.WallyTx;
+import com.bc.libwally.tx.raw.WallyTx;
 
 class PsbtJni {
 

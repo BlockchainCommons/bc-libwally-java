@@ -8,7 +8,7 @@ import com.bc.libwally.bip32.Network;
 import com.bc.libwally.core.CoreException;
 import com.bc.libwally.psbt.raw.WallyPsbt;
 import com.bc.libwally.tx.Transaction;
-import com.bc.libwally.tx.WallyTx;
+import com.bc.libwally.tx.raw.WallyTx;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -34,10 +34,6 @@ public class Psbt {
     private final PsbtOutput[] outputs;
 
     private final WallyPsbt psbt;
-
-    private WallyPsbt nativeClone() {
-        return wally_psbt_clone_alloc(psbt, 0);
-    }
 
     public static Psbt newInstance(byte[] data, Network network) {
         WallyPsbt psbt = wally_psbt_from_bytes(data);
@@ -140,7 +136,7 @@ public class Psbt {
 
     public Psbt signed(Key privKey) {
         // TODO: sanity key for network
-        WallyPsbt clonedPsbt = nativeClone();
+        WallyPsbt clonedPsbt = psbtNativeClone();
         return new Psbt(wally_psbt_sign(clonedPsbt, privKey.getData(), 0), network);
     }
 
@@ -165,8 +161,12 @@ public class Psbt {
     }
 
     public Psbt finalized() {
-        WallyPsbt clonedPsbt = nativeClone();
+        WallyPsbt clonedPsbt = psbtNativeClone();
         return new Psbt(wally_psbt_finalize(clonedPsbt), network);
+    }
+
+    private WallyPsbt psbtNativeClone() {
+        return wally_psbt_clone_alloc(psbt, 0);
     }
 
     public Network getNetwork() {

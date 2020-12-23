@@ -1,8 +1,8 @@
 package com.bc.libwally.psbt.raw;
 
-import com.bc.libwally.tx.WallyTx;
-import com.bc.libwally.tx.WallyTxOutput;
-import com.bc.libwally.tx.WallyTxWitnessStack;
+import com.bc.libwally.tx.raw.WallyTx;
+import com.bc.libwally.tx.raw.WallyTxOutput;
+import com.bc.libwally.tx.raw.WallyTxWitnessStack;
 
 public class WallyPsbtInput {
 

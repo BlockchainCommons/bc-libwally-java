@@ -1,6 +1,7 @@
 package com.bc.libwally.script;
 
-import com.bc.libwally.tx.WallyTxWitnessStack;
+import com.bc.libwally.tx.Transaction;
+import com.bc.libwally.tx.raw.WallyTxWitnessStack;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -57,7 +58,7 @@ public class Witness implements Cloneable {
     }
 
     public WallyTxWitnessStack createWallyTxWitnessStack() {
-        return WallyTxWitnessStack.create(this);
+        return Transaction.createWallyTxWitnessStack(this);
     }
 
     @Override

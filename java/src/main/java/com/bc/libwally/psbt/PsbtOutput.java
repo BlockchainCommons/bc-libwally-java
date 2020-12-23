@@ -9,7 +9,7 @@ import com.bc.libwally.bip32.Network;
 import com.bc.libwally.psbt.raw.WallyPsbtOutput;
 import com.bc.libwally.script.ScriptPubKey;
 import com.bc.libwally.tx.TxOutput;
-import com.bc.libwally.tx.WallyTxOutput;
+import com.bc.libwally.tx.raw.WallyTxOutput;
 
 import java.util.ArrayList;
 import java.util.Arrays;

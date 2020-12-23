@@ -1,21 +1,6 @@
-package com.bc.libwally.tx;
-
-import com.bc.libwally.script.Witness;
-
-import static com.bc.libwally.ArrayUtils.append;
-import static com.bc.libwally.tx.TxConstant.WALLY_SIGHASH_ALL;
-import static com.bc.libwally.tx.TxJni.wally_tx_witness_stack_init_alloc;
-import static com.bc.libwally.tx.TxJni.wally_tx_witness_stack_set;
+package com.bc.libwally.tx.raw;
 
 public class WallyTxWitnessStack implements Cloneable {
-
-    public static WallyTxWitnessStack create(Witness witness) {
-        WallyTxWitnessStack stack = wally_tx_witness_stack_init_alloc(2);
-        byte[] sigHashBytes = new byte[]{WALLY_SIGHASH_ALL};
-        stack = wally_tx_witness_stack_set(stack, 0, append(witness.getSignature(), sigHashBytes));
-        stack = wally_tx_witness_stack_set(stack, 1, witness.getType().getPubKey().getData());
-        return stack;
-    }
 
     private final WallyTxWitnessItem[] items;
 

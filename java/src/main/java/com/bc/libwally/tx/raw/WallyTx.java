@@ -1,6 +1,5 @@
-package com.bc.libwally.tx;
+package com.bc.libwally.tx.raw;
 
-import static com.bc.libwally.tx.TxJni.wally_tx_clone_alloc;
 
 public class WallyTx implements Cloneable {
 
@@ -54,10 +53,6 @@ public class WallyTx implements Cloneable {
 
     public int getOutputsAllocLength() {
         return outputsAllocLength;
-    }
-
-    public WallyTx nativeClone() {
-        return wally_tx_clone_alloc(this, 0);
     }
 
     @Override

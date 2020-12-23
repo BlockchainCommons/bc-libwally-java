@@ -1,6 +1,6 @@
 package com.bc.libwally.psbt.raw;
 
-import com.bc.libwally.tx.WallyTx;
+import com.bc.libwally.tx.raw.WallyTx;
 
 public class WallyPsbt {
 

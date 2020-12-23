@@ -1,5 +1,10 @@
 package com.bc.libwally.tx;
 
+import com.bc.libwally.tx.raw.WallyTx;
+import com.bc.libwally.tx.raw.WallyTxInput;
+import com.bc.libwally.tx.raw.WallyTxOutput;
+import com.bc.libwally.tx.raw.WallyTxWitnessStack;
+
 class TxJni {
 
     static {

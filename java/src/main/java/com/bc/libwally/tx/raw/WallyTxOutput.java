@@ -1,4 +1,4 @@
-package com.bc.libwally.tx;
+package com.bc.libwally.tx.raw;
 
 public class WallyTxOutput implements Cloneable {
 
