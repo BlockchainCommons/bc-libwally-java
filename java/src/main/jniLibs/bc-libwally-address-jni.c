@@ -191,8 +191,7 @@ Java_com_bc_libwally_address_AddressJni_wally_1scriptpubkey_1to_1address(JNIEnv 
         return NULL;
     }
 
-    unsigned char *c_script_pubkey = (unsigned char *) to_unsigned_char_array(env,
-                                                                              script_pub_key);
+    unsigned char *c_script_pubkey = to_unsigned_char_array(env, script_pub_key);
     jsize script_pubkey_len = (*env)->GetArrayLength(env, script_pub_key);
     char *output = "";
 
@@ -224,7 +223,7 @@ Java_com_bc_libwally_address_AddressJni_wally_1addr_1segwit_1from_1bytes(JNIEnv 
         return NULL;
     }
 
-    unsigned char *c_bytes = (unsigned char *) to_unsigned_char_array(env, bytes);
+    unsigned char *c_bytes = to_unsigned_char_array(env, bytes);
     jsize bytes_len = (*env)->GetArrayLength(env, bytes);
     const char *c_addr_family = (*env)->GetStringUTFChars(env, addr_family, 0);
     char *output = "";
@@ -316,7 +315,7 @@ Java_com_bc_libwally_address_AddressJni_wally_1wif_1from_1bytes(JNIEnv *env,
         return NULL;
     }
 
-    unsigned char *c_prv_key = (unsigned char *) to_unsigned_char_array(env, priv_key);
+    unsigned char *c_prv_key = to_unsigned_char_array(env, priv_key);
     jsize prv_len = (*env)->GetArrayLength(env, priv_key);
 
     char *output = "";

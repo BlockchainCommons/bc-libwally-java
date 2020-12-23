@@ -89,7 +89,7 @@ Java_com_bc_libwally_bip39_Bip39Jni_bip39_1mnemonic_1from_1bytes(JNIEnv *env,
         }
     }
 
-    unsigned char *c_bytes = (unsigned char *) to_unsigned_char_array(env, bytes);
+    unsigned char *c_bytes = to_unsigned_char_array(env, bytes);
     jsize byte_len = (*env)->GetArrayLength(env, bytes);
     char *output = "";
 
