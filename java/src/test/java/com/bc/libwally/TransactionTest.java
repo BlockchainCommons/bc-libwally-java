@@ -87,9 +87,9 @@ public class TransactionTest {
 
         Transaction tx = new Transaction(new TxInput[]{input}, new TxOutput[]{output});
         assertNull(tx.getHash());
-        assertEquals(1, tx.getTx().getVersion());
-        assertEquals(1, tx.getTx().getInputs().length);
-        assertEquals(1, tx.getTx().getOutputs().length);
+        assertEquals(1, tx.getRawTx().getVersion());
+        assertEquals(1, tx.getRawTx().getInputs().length);
+        assertEquals(1, tx.getRawTx().getOutputs().length);
     }
 
     @Test

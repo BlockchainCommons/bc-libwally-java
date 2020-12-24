@@ -45,7 +45,7 @@ public class Transaction {
 
     private final TxOutput[] outputs;
 
-    private final WallyTx tx;
+    private final WallyTx rawTx;
 
     public static WallyTxWitnessStack createWallyTxWitnessStack(Witness witness) {
         WallyTxWitnessStack stack = wally_tx_witness_stack_init_alloc(2);
@@ -55,8 +55,8 @@ public class Transaction {
         return stack;
     }
 
-    public Transaction(WallyTx tx) {
-        this.tx = tx;
+    public Transaction(WallyTx rawTx) {
+        this.rawTx = rawTx;
         this.hash = null;
         this.inputs = null;
         this.outputs = null;
@@ -67,11 +67,11 @@ public class Transaction {
         outputs = null;
         byte[] data = hex2Bytes(hex);
         if (data.length != SHA256_LEN) {
-            tx = wally_tx_from_bytes(data, WALLY_TX_FLAG_USE_WITNESS);
+            rawTx = wally_tx_from_bytes(data, WALLY_TX_FLAG_USE_WITNESS);
             hash = null;
         } else {
             hash = reversed(data);
-            tx = null;
+            rawTx = null;
         }
     }
 
@@ -91,18 +91,18 @@ public class Transaction {
             tx = wally_tx_add_output(tx, output.createWallyTxOutput());
         }
 
-        this.tx = tx;
+        this.rawTx = tx;
     }
 
-    private Transaction(TxInput[] inputs, TxOutput[] outputs, WallyTx tx) {
+    private Transaction(TxInput[] inputs, TxOutput[] outputs, WallyTx rawTx) {
         this.inputs = inputs;
         this.outputs = outputs;
-        this.tx = tx;
+        this.rawTx = rawTx;
         this.hash = null;
     }
 
     public String getDescription() {
-        if (tx == null) {
+        if (rawTx == null) {
             return null;
         }
 
@@ -114,7 +114,7 @@ public class Transaction {
             }
         }
 
-        return wally_tx_to_hex(tx, WALLY_TX_FLAG_USE_WITNESS);
+        return wally_tx_to_hex(rawTx, WALLY_TX_FLAG_USE_WITNESS);
     }
 
     public Long getTotalIn() {
@@ -128,10 +128,10 @@ public class Transaction {
     }
 
     public Long getTotalOut() {
-        if (tx == null)
+        if (rawTx == null)
             return null;
 
-        return wally_tx_get_total_output_satoshi(tx);
+        return wally_tx_get_total_output_satoshi(rawTx);
     }
 
     public Boolean isFunded() {
@@ -143,7 +143,7 @@ public class Transaction {
     }
 
     public Integer getVBytes() {
-        if (tx == null)
+        if (rawTx == null)
             return null;
 
         WallyTx tx = nativeCloneTx();
@@ -181,7 +181,7 @@ public class Transaction {
     }
 
     public Transaction signed(HDKey[] keys) {
-        if (tx == null)
+        if (rawTx == null)
             throw new TxException("No tx to sign");
 
         if (inputs == null)
@@ -208,7 +208,7 @@ public class Transaction {
                             clonedTx = wally_tx_set_input_script(clonedTx, i, scriptSig);
                             // fallthrough here
                         case PAY_TO_WITNESS_PUBKEY_HASH:
-                            byte[] pubKeyData = keys[i].getKey().getPubKey();
+                            byte[] pubKeyData = keys[i].getRawKey().getPubKey();
                             if (!Arrays.equals(pubKeyData,
                                                input.getWitness()
                                                     .getType()
@@ -246,7 +246,7 @@ public class Transaction {
                 }
 
 
-                byte[] privKey = keys[i].getKey().getPrivKey();
+                byte[] privKey = keys[i].getRawKey().getPrivKey();
                 // skip prefix byte 0
                 privKey = slice(privKey, 1, privKey.length);
 
@@ -260,7 +260,7 @@ public class Transaction {
                                                         EC_FLAG_ECDSA | EC_FLAG_GRIND_R);
 
                 // Check that signature is valid and for the correct public key
-                if (!ecSigVerify(keys[i].getKey().getPubKey(),
+                if (!ecSigVerify(keys[i].getRawKey().getPubKey(),
                                  messageBytes,
                                  EC_FLAG_ECDSA,
                                  compactSigBytes)) {
@@ -304,7 +304,7 @@ public class Transaction {
     }
 
     private WallyTx nativeCloneTx() {
-        return wally_tx_clone_alloc(tx, 0);
+        return wally_tx_clone_alloc(rawTx, 0);
     }
 
     public byte[] getHash() {
@@ -319,7 +319,7 @@ public class Transaction {
         return outputs;
     }
 
-    public WallyTx getTx() {
-        return tx;
+    public WallyTx getRawTx() {
+        return rawTx;
     }
 }

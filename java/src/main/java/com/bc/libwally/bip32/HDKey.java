@@ -22,13 +22,13 @@ import static com.bc.libwally.bip32.Bip32Jni.bip32_key_to_base58;
 
 public class HDKey {
 
-    private final WallyHDKey key;
+    private final WallyHDKey rawKey;
 
     private byte[] masterFingerprint;
     // TODO: https://github.com/ElementsProject/libwally-core/issues/164
 
-    public HDKey(WallyHDKey key, byte[] masterFingerprint) {
-        this.key = key;
+    private HDKey(WallyHDKey rawKey, byte[] masterFingerprint) {
+        this.rawKey = rawKey;
         this.masterFingerprint = masterFingerprint;
     }
 
@@ -37,10 +37,10 @@ public class HDKey {
     }
 
     public HDKey(String base58, byte[] masterFingerprint) {
-        this.key = bip32_key_from_base58_alloc(base58);
+        this.rawKey = bip32_key_from_base58_alloc(base58);
         this.masterFingerprint = masterFingerprint;
 
-        if (key.getDepth() == 0) {
+        if (rawKey.getDepth() == 0) {
             byte[] fingerprint = getFingerprint();
             if (this.masterFingerprint == null) {
                 this.masterFingerprint = fingerprint;
@@ -53,7 +53,7 @@ public class HDKey {
     public HDKey(Bip39Seed seed, Network network) {
         long version = network == Network.MAINNET ? BIP32_VER_MAIN_PRIVATE : BIP32_VER_TEST_PRIVATE;
 
-        this.key = bip32_key_from_seed_alloc(seed.getData(), version, 0);
+        this.rawKey = bip32_key_from_seed_alloc(seed.getData(), version, 0);
         this.masterFingerprint = getFingerprint();
     }
 
@@ -62,12 +62,12 @@ public class HDKey {
     }
 
     public byte[] getFingerprint() {
-        return bip32_key_get_fingerprint(this.key);
+        return bip32_key_get_fingerprint(this.rawKey);
     }
 
     public Network getNetwork() {
-        if (this.key.getVersion() == BIP32_VER_MAIN_PRIVATE ||
-            this.key.getVersion() == BIP32_VER_MAIN_PUBLIC) {
+        if (this.rawKey.getVersion() == BIP32_VER_MAIN_PRIVATE ||
+            this.rawKey.getVersion() == BIP32_VER_MAIN_PUBLIC) {
             return Network.MAINNET;
         } else {
             return Network.TESTNET;
@@ -75,8 +75,8 @@ public class HDKey {
     }
 
     public boolean isNeutered() {
-        return this.key.getVersion() == BIP32_VER_MAIN_PUBLIC ||
-               this.key.getVersion() == BIP32_VER_TEST_PUBLIC;
+        return this.rawKey.getVersion() == BIP32_VER_MAIN_PUBLIC ||
+               this.rawKey.getVersion() == BIP32_VER_TEST_PUBLIC;
     }
 
     public String getDescription() {
@@ -84,15 +84,15 @@ public class HDKey {
     }
 
     public String getXpub() {
-        return bip32_key_to_base58(key, BIP32_FLAG_KEY_PUBLIC);
+        return bip32_key_to_base58(rawKey, BIP32_FLAG_KEY_PUBLIC);
     }
 
     public String getXprv() {
-        return bip32_key_to_base58(key, BIP32_FLAG_KEY_PRIVATE);
+        return bip32_key_to_base58(rawKey, BIP32_FLAG_KEY_PRIVATE);
     }
 
     public PubKey getPubKey() {
-        return new PubKey(key.getPubKey(), getNetwork(), true);
+        return new PubKey(rawKey.getPubKey(), getNetwork(), true);
     }
 
     public Key getPrivKey() {
@@ -100,13 +100,13 @@ public class HDKey {
             return null;
 
         // skip prefix byte 0
-        byte[] data = slice(key.getPrivKey(), 1, key.getPrivKey().length);
+        byte[] data = slice(rawKey.getPrivKey(), 1, rawKey.getPrivKey().length);
 
         return new Key(data, getNetwork(), true);
     }
 
     public HDKey derive(Bip32Path path) {
-        short depth = key.getDepth();
+        short depth = rawKey.getDepth();
 
         Bip32Path tmpPath = path;
         if (!path.isRelative()) {
@@ -126,7 +126,7 @@ public class HDKey {
         }
 
         long flags = isNeutered() ? BIP32_FLAG_KEY_PUBLIC : BIP32_FLAG_KEY_PRIVATE;
-        WallyHDKey key = bip32_key_from_parent_path_alloc(this.key, tmpPath.getRawPath(), flags);
+        WallyHDKey key = bip32_key_from_parent_path_alloc(this.rawKey, tmpPath.getRawPath(), flags);
         return new HDKey(key, this.masterFingerprint);
     }
 
@@ -134,7 +134,7 @@ public class HDKey {
         return masterFingerprint;
     }
 
-    public WallyHDKey getKey() {
-        return key;
+    public WallyHDKey getRawKey() {
+        return rawKey;
     }
 }

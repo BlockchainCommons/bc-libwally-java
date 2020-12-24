@@ -101,10 +101,10 @@ public class Address {
                 version = addrType == WALLY_ADDRESS_TYPE_P2PKH ? 0x6F : 0xC4;
             }
 
-            addr = wally_bip32_key_to_address(key.getKey(), addrType, version);
+            addr = wally_bip32_key_to_address(key.getRawKey(), addrType, version);
 
         } else {
-            addr = wally_bip32_key_to_addr_segwit(key.getKey(), getAddrFamily(key.getNetwork()));
+            addr = wally_bip32_key_to_addr_segwit(key.getRawKey(), getAddrFamily(key.getNetwork()));
         }
 
         Address address = new Address(addr);

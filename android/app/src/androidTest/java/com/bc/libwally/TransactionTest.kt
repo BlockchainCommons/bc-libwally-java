@@ -84,9 +84,9 @@ class TransactionTest {
         val output = TxOutput(scriptPubKey, 1000L, Network.MAINNET)
         val tx = Transaction(arrayOf(input), arrayOf(output))
         assertNull(tx.hash)
-        assertEquals(1, tx.tx.version)
-        assertEquals(1, tx.tx.inputs.size.toLong())
-        assertEquals(1, tx.tx.outputs.size.toLong())
+        assertEquals(1, tx.rawTx.version)
+        assertEquals(1, tx.rawTx.inputs.size.toLong())
+        assertEquals(1, tx.rawTx.outputs.size.toLong())
     }
 
     @Test
