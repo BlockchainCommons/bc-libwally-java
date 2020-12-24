@@ -6,6 +6,25 @@ Opinionated Java wrapper around [LibWally](https://github.com/ElementsProject/li
 
 ` Blockchain Commons Libwally Java library`  is an early Work-In-Progress.
 
+## Usage Instructions
+Derive address from a seed
+```java
+Bip39Mnemonic mnemonic = new Bip39Mnemonic("abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about");
+HDKey masterKey = new HDKey(mnemonic.getSeed("bip39 passphrase"));
+Bip32Path path = new Bip32Path("m/44'/0'/0'");
+HDKey childKey = masterKey.derive(path);
+Address address = new Address(childKey, AddressType.PAY_TO_WITNESS_PUBKEY_HASH); // bc1qtqq3hzwgswm56tt3h04ss8qmmttt6py9yj8h6c
+```
+
+Parse an address
+```java
+Address address = new Address("bc1qtqq3hzwgswm56tt3h04ss8qmmttt6py9yj8h6c");
+String scriptPubKeyHex = address.getScriptPubKey().getHexData(); // 001458011b89c883b74d2d71bbeb081c1bdad6bd0485
+ScriptPubKey.ScriptType type = address.getScriptPubKey().getType(); // PAY_TO_WITNESS_PUBKEY_HASH
+```
+
+> See test cases for more details.
+
 ## Origin, Authors, Copyright & Licenses
 
 Unless otherwise noted (either in this [/README.md](./README.md) or in the file's header comments) the contents of this repository are Copyright © 2020 by Blockchain Commons, LLC, and are [licensed](./LICENSE) under the [spdx:BSD-2-Clause Plus Patent License](https://spdx.org/licenses/BSD-2-Clause-Patent.html).
