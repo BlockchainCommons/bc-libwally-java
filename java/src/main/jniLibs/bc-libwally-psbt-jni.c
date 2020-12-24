@@ -247,3 +247,83 @@ Java_com_bc_libwally_psbt_PsbtJni_wally_1psbt_1finalize(JNIEnv *env, jclass claz
 
     return result;
 }
+
+JNIEXPORT jobject JNICALL
+Java_com_bc_libwally_psbt_PsbtJni_wally_1psbt_1from_1base64(JNIEnv *env,
+                                                            jclass clazz,
+                                                            jstring base64) {
+
+    struct wally_psbt *output = (struct wally_psbt *) calloc(1, sizeof(struct wally_psbt));
+    const char *c_base64 = (*env)->GetStringUTFChars(env, base64, 0);
+
+    int ret = wally_psbt_from_base64(c_base64, &output);
+    if (ret != WALLY_OK) {
+        free(output);
+        (*env)->ReleaseStringUTFChars(env, base64, c_base64);
+        throw_new_psbt_exception(env, "wally_psbt_from_base64 error");
+        return NULL;
+    }
+
+    jobject result = to_jWallyPsbt(env, output);
+
+    free(output);
+    (*env)->ReleaseStringUTFChars(env, base64, c_base64);
+
+    return result;
+}
+
+JNIEXPORT jstring JNICALL
+Java_com_bc_libwally_psbt_PsbtJni_wally_1psbt_1to_1base64(JNIEnv *env,
+                                                          jclass clazz,
+                                                          jobject psbt,
+                                                          jlong flags) {
+
+    if (psbt == NULL) {
+        throw_new_psbt_exception(env, "psbt is NULL");
+        return NULL;
+    }
+
+    if (flags > UINT32_MAX) {
+        throw_new_psbt_exception(env, "flags is too large");
+        return NULL;
+    }
+
+    struct wally_psbt *c_psbt = to_c_wally_psbt(env, psbt);
+    char *output = "";
+
+    int ret = wally_psbt_to_base64(c_psbt, (uint32_t) flags, &output);
+    if (ret != WALLY_OK) {
+        free(c_psbt);
+        throw_new_psbt_exception(env, "wally_psbt_to_base64 error");
+        return NULL;
+    }
+
+    jstring result = (*env)->NewStringUTF(env, output);
+
+    free(c_psbt);
+
+    return result;
+}
+
+JNIEXPORT jboolean JNICALL
+Java_com_bc_libwally_psbt_PsbtJni_wally_1psbt_1is_1finalized(JNIEnv *env,
+                                                             jclass clazz,
+                                                             jobject psbt) {
+    if (psbt == NULL) {
+        throw_new_psbt_exception(env, "psbt is NULL");
+        return JNI_FALSE;
+    }
+
+    struct wally_psbt *c_psbt = to_c_wally_psbt(env, psbt);
+    size_t written = 0;
+
+    int ret = wally_psbt_is_finalized(c_psbt, &written);
+    if (ret != WALLY_OK) {
+        free(c_psbt);
+        throw_new_psbt_exception(env, "wally_psbt_is_finalized error");
+        return JNI_FALSE;
+    }
+
+    free(c_psbt);
+    return written;
+}

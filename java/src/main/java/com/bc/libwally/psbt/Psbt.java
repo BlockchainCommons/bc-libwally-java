@@ -5,7 +5,6 @@ import com.bc.libwally.address.PubKey;
 import com.bc.libwally.bip32.Bip32Exception;
 import com.bc.libwally.bip32.HDKey;
 import com.bc.libwally.bip32.Network;
-import com.bc.libwally.core.CoreException;
 import com.bc.libwally.psbt.raw.WallyPsbt;
 import com.bc.libwally.tx.Transaction;
 import com.bc.libwally.tx.raw.WallyTx;
@@ -15,14 +14,15 @@ import java.util.Map;
 
 import static com.bc.libwally.ArrayUtils.slice;
 import static com.bc.libwally.WallyConstant.WALLY_OK;
-import static com.bc.libwally.core.Core.base642Bytes;
-import static com.bc.libwally.core.Core.bytes2Base64;
 import static com.bc.libwally.psbt.PsbtJni.wally_psbt_clone_alloc;
 import static com.bc.libwally.psbt.PsbtJni.wally_psbt_extract;
 import static com.bc.libwally.psbt.PsbtJni.wally_psbt_finalize;
+import static com.bc.libwally.psbt.PsbtJni.wally_psbt_from_base64;
 import static com.bc.libwally.psbt.PsbtJni.wally_psbt_from_bytes;
 import static com.bc.libwally.psbt.PsbtJni.wally_psbt_get_length;
+import static com.bc.libwally.psbt.PsbtJni.wally_psbt_is_finalized;
 import static com.bc.libwally.psbt.PsbtJni.wally_psbt_sign;
+import static com.bc.libwally.psbt.PsbtJni.wally_psbt_to_base64;
 import static com.bc.libwally.psbt.PsbtJni.wally_psbt_to_bytes;
 
 public class Psbt {
@@ -33,54 +33,44 @@ public class Psbt {
 
     private final PsbtOutput[] outputs;
 
-    private final WallyPsbt psbt;
+    private final WallyPsbt rawPsbt;
 
-    public static Psbt newInstance(byte[] data, Network network) {
-        WallyPsbt psbt = wally_psbt_from_bytes(data);
-        if (psbt.getTx() == null) {
+    public Psbt(String base64, Network network) {
+        this(wally_psbt_from_base64(base64), network);
+    }
+
+    public Psbt(byte[] data, Network network) {
+        this(wally_psbt_from_bytes(data), network);
+    }
+
+    private Psbt(WallyPsbt rawPsbt, Network network) {
+        if (rawPsbt.getTx() == null) {
             throw new PsbtException("psbt tx is NULL");
         }
-        return new Psbt(psbt, network);
-    }
 
-    public static Psbt newInstance(String base64, Network network) {
-        if (base64 == null || base64.isEmpty()) {
-            throw new PsbtException("base64 string is invalid");
-        }
-
-        byte[] data;
-        try {
-            data = base642Bytes(base64);
-        } catch (CoreException ignore) {
-            throw new PsbtException("base64 string is invalid");
-        }
-        return newInstance(data, network);
-    }
-
-    private Psbt(WallyPsbt psbt, Network network) {
         this.network = network;
-        this.psbt = psbt;
+        this.rawPsbt = rawPsbt;
 
-        PsbtInput[] inputs = new PsbtInput[psbt.getInputsAllocLength()];
+        PsbtInput[] inputs = new PsbtInput[rawPsbt.getInputsAllocLength()];
         for (int i = 0; i < inputs.length; i++) {
-            inputs[i] = new PsbtInput(psbt.getInputs()[i], network);
+            inputs[i] = new PsbtInput(rawPsbt.getInputs()[i], network);
         }
         this.inputs = inputs;
 
-        PsbtOutput[] outputs = new PsbtOutput[psbt.getOutputsAllocLength()];
+        PsbtOutput[] outputs = new PsbtOutput[rawPsbt.getOutputsAllocLength()];
         for (int i = 0; i < outputs.length; i++) {
-            outputs[i] = new PsbtOutput(psbt.getOutputs()[i],
-                                        psbt.getTx().getOutputs()[i],
+            outputs[i] = new PsbtOutput(rawPsbt.getOutputs()[i],
+                                        rawPsbt.getTx().getOutputs()[i],
                                         network);
         }
         this.outputs = outputs;
     }
 
     public byte[] getData() {
-        int len = wally_psbt_get_length(psbt, 0);
+        int len = wally_psbt_get_length(rawPsbt, 0);
         byte[] data = new byte[len];
         int[] written = new int[1];
-        if (wally_psbt_to_bytes(psbt, 0, data, written) != WALLY_OK) {
+        if (wally_psbt_to_bytes(rawPsbt, 0, data, written) != WALLY_OK) {
             throw new PsbtException("wally_psbt_to_bytes error");
         }
 
@@ -88,19 +78,18 @@ public class Psbt {
     }
 
     public String getDescription() {
-        return bytes2Base64(getData());
+        return wally_psbt_to_base64(rawPsbt, 0);
     }
 
     public boolean isComplete() {
-        // TODO: add function to libwally-core to check this directly
-        return getTransactionFinal() != null;
+        return wally_psbt_is_finalized(rawPsbt);
     }
 
     public Transaction getTransaction() {
-        if (psbt.getTx() == null) {
+        if (rawPsbt.getTx() == null) {
             throw new PsbtException("psbt tx is NULL");
         }
-        return new Transaction(psbt.getTx());
+        return new Transaction(rawPsbt.getTx());
     }
 
     public Long getFee() {
@@ -127,7 +116,7 @@ public class Psbt {
 
     public Transaction getTransactionFinal() {
         try {
-            WallyTx tx = wally_psbt_extract(psbt);
+            WallyTx tx = wally_psbt_extract(rawPsbt);
             return new Transaction(tx);
         } catch (PsbtException ignore) {
             return null;
@@ -135,12 +124,17 @@ public class Psbt {
     }
 
     public Psbt signed(Key privKey) {
-        // TODO: sanity key for network
+        if (privKey.getNetwork() != network) {
+            throw new PsbtException("Invalid key network");
+        }
         WallyPsbt clonedPsbt = psbtNativeClone();
         return new Psbt(wally_psbt_sign(clonedPsbt, privKey.getData(), 0), network);
     }
 
     public Psbt signed(HDKey hdKey) {
+        if (hdKey.getNetwork() != network) {
+            throw new PsbtException("Invalid key network");
+        }
         Psbt psbt = this;
         for (PsbtInput input : inputs) {
             Map<PubKey, KeyOrigin> originMap = input.getCanSignOriginMap(hdKey);
@@ -166,7 +160,7 @@ public class Psbt {
     }
 
     private WallyPsbt psbtNativeClone() {
-        return wally_psbt_clone_alloc(psbt, 0);
+        return wally_psbt_clone_alloc(rawPsbt, 0);
     }
 
     public Network getNetwork() {
@@ -181,8 +175,8 @@ public class Psbt {
         return outputs;
     }
 
-    public WallyPsbt getPsbt() {
-        return psbt;
+    public WallyPsbt getRawPsbt() {
+        return rawPsbt;
     }
 
     @Override

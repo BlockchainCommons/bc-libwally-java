@@ -428,7 +428,7 @@ public class PsbtTest {
                                                        "PAAA=";
 
     private void testInvalidPsbt(String psbt) {
-        assertThrows("", PsbtException.class, () -> Psbt.newInstance(psbt, Network.TESTNET));
+        assertThrows("", PsbtException.class, () -> new Psbt(psbt, Network.TESTNET));
     }
 
     @Test
@@ -443,14 +443,14 @@ public class PsbtTest {
 
     @Test
     public void testParseBase64() {
-        Psbt psbt = Psbt.newInstance(VALID_PSBT, Network.TESTNET);
+        Psbt psbt = new Psbt(VALID_PSBT, Network.TESTNET);
         assertEquals(VALID_PSBT, psbt.getDescription());
     }
 
     @Test
     public void testParseBinary() {
         byte[] data = base642Bytes(VALID_PSBT);
-        Psbt psbt = Psbt.newInstance(data, Network.TESTNET);
+        Psbt psbt = new Psbt(data, Network.TESTNET);
         assertEquals(VALID_PSBT, psbt.getDescription());
         assertArrayEquals(data, psbt.getData());
     }
@@ -463,20 +463,20 @@ public class PsbtTest {
 
     @Test
     public void testComplete() {
-        Psbt incompletePsbt = Psbt.newInstance(VALID_PSBT, Network.TESTNET);
-        Psbt completePsbt = Psbt.newInstance(FINALIZED_PSBT, Network.TESTNET);
+        Psbt incompletePsbt = new Psbt(VALID_PSBT, Network.TESTNET);
+        Psbt completePsbt = new Psbt(FINALIZED_PSBT, Network.TESTNET);
         assertFalse(incompletePsbt.isComplete());
-        assertFalse(Psbt.newInstance(UNSIGNED_PSBT, Network.TESTNET).isComplete());
-        assertFalse(Psbt.newInstance(SIGNED_PSBT_0_2, Network.TESTNET).isComplete());
+        assertFalse(new Psbt(UNSIGNED_PSBT, Network.TESTNET).isComplete());
+        assertFalse(new Psbt(SIGNED_PSBT_0_2, Network.TESTNET).isComplete());
         assertTrue(completePsbt.isComplete());
     }
 
     @Test
     public void testExtractTransaction() {
-        Psbt incompletePsbt = Psbt.newInstance(VALID_PSBT, Network.TESTNET);
+        Psbt incompletePsbt = new Psbt(VALID_PSBT, Network.TESTNET);
         assertNull(incompletePsbt.getTransactionFinal());
 
-        Psbt completePsbt = Psbt.newInstance(FINALIZED_PSBT, Network.TESTNET);
+        Psbt completePsbt = new Psbt(FINALIZED_PSBT, Network.TESTNET);
         assertNotNull(completePsbt.getTransactionFinal());
         assertEquals("0200000000010258e87a21b56daf0c23be8e7070456c336f7cbaa5c8757924f545887bb2ab" +
                      "dd7500000000da00473044022074018ad4180097b873323c0015720b3684cc8123891048e7db" +
@@ -505,11 +505,11 @@ public class PsbtTest {
         Key privKey2 = new Key(WIF_2, Network.TESTNET);
         Key privKey3 = new Key(WIF_3, Network.TESTNET);
 
-        Psbt psbt1 = Psbt.newInstance(UNSIGNED_PSBT, Network.TESTNET);
-        Psbt psbt2 = Psbt.newInstance(UNSIGNED_PSBT, Network.TESTNET);
+        Psbt psbt1 = new Psbt(UNSIGNED_PSBT, Network.TESTNET);
+        Psbt psbt2 = new Psbt(UNSIGNED_PSBT, Network.TESTNET);
 
-        Psbt expectedPsbt02 = Psbt.newInstance(SIGNED_PSBT_0_2, Network.TESTNET);
-        Psbt expectedPsbt13 = Psbt.newInstance(SIGNED_PSBT_1_3, Network.TESTNET);
+        Psbt expectedPsbt02 = new Psbt(SIGNED_PSBT_0_2, Network.TESTNET);
+        Psbt expectedPsbt13 = new Psbt(SIGNED_PSBT_1_3, Network.TESTNET);
 
         Psbt p102 = psbt1.signed(privKey0).signed(privKey2);
         assertEquals(expectedPsbt02.getDescription(), p102.getDescription());
@@ -520,13 +520,13 @@ public class PsbtTest {
 
     @Test
     public void testInputs() {
-        Psbt psbt = Psbt.newInstance(UNSIGNED_PSBT, Network.TESTNET);
+        Psbt psbt = new Psbt(UNSIGNED_PSBT, Network.TESTNET);
         assertEquals(2, psbt.getInputs().length);
     }
 
     @Test
     public void testOutput() {
-        Psbt psbt = Psbt.newInstance(UNSIGNED_PSBT, Network.TESTNET);
+        Psbt psbt = new Psbt(UNSIGNED_PSBT, Network.TESTNET);
         assertEquals(2, psbt.getOutputs().length);
     }
 
@@ -538,7 +538,7 @@ public class PsbtTest {
         KeyOrigin expectedOrigin3 = new KeyOrigin(FINGERPRINT, PATH_3);
         KeyOrigin expectedOrigin4 = new KeyOrigin(FINGERPRINT, PATH_4);
         KeyOrigin expectedOrigin5 = new KeyOrigin(FINGERPRINT, PATH_5);
-        Psbt psbt = Psbt.newInstance(UNSIGNED_PSBT, Network.TESTNET);
+        Psbt psbt = new Psbt(UNSIGNED_PSBT, Network.TESTNET);
 
         assertEquals(2, psbt.getInputs().length);
         Map<PubKey, KeyOrigin> inOrigin0 = psbt.getInputs()[0].getOriginMap();
@@ -562,7 +562,7 @@ public class PsbtTest {
     @Test
     public void testCanSign() {
         HDKey hdKey = new HDKey(MASTER_KEY_XPRIV);
-        Psbt psbt = Psbt.newInstance(UNSIGNED_PSBT, Network.TESTNET);
+        Psbt psbt = new Psbt(UNSIGNED_PSBT, Network.TESTNET);
         for (PsbtInput input : psbt.getInputs()) {
             assertTrue(input.canSign(hdKey));
         }
@@ -570,15 +570,15 @@ public class PsbtTest {
 
     @Test
     public void testFinalize() {
-        Psbt psbt = Psbt.newInstance(SIGNED_PSBT, Network.TESTNET);
-        Psbt expected = Psbt.newInstance(FINALIZED_PSBT, Network.TESTNET);
+        Psbt psbt = new Psbt(SIGNED_PSBT, Network.TESTNET);
+        Psbt expected = new Psbt(FINALIZED_PSBT, Network.TESTNET);
         Psbt finalized = psbt.finalized();
         assertEquals(expected, finalized);
     }
 
     @Test
     public void testSignWithHDKey() {
-        Psbt psbt = Psbt.newInstance(UNSIGNED_PSBT, Network.TESTNET);
+        Psbt psbt = new Psbt(UNSIGNED_PSBT, Network.TESTNET);
         HDKey masterKey = new HDKey(MASTER_KEY_XPRIV);
         Psbt signed = psbt.signed(masterKey);
         Psbt finalized = signed.finalized();
@@ -591,7 +591,7 @@ public class PsbtTest {
                 "xpub6E64WfdQwBGz85XhbZryr9gUGUPBgoSu5WV6tJWpzAvgAmpVpdPHkT3XYm9R5J6MeWzv" +
                 "LQoz4q845taC9Q28XutbptxAmg7q8QPkjvTL4oi",
                 hex2Bytes("3442193e"));
-        Psbt psbt = Psbt.newInstance(MULTI_UNSIGNED_PSBT_WITH_CHANGE, Network.MAINNET);
+        Psbt psbt = new Psbt(MULTI_UNSIGNED_PSBT_WITH_CHANGE, Network.MAINNET);
         for (PsbtInput input : psbt.getInputs()) {
             assertTrue(input.canSign(us));
         }
@@ -601,9 +601,9 @@ public class PsbtTest {
     public void testSignRealMultisigWithHDKey() {
         HDKey keySigner1 = new HDKey(MASTER_1);
         HDKey keySigner2 = new HDKey(MASTER_2);
-        Psbt psbtWithoutChange = Psbt.newInstance(MULTI_UNSIGNED_PSBT_WITHOUT_CHANGE,
+        Psbt psbtWithoutChange = new Psbt(MULTI_UNSIGNED_PSBT_WITHOUT_CHANGE,
                                                   Network.MAINNET);
-        Psbt psbtWithChange = Psbt.newInstance(MULTI_UNSIGNED_PSBT_WITH_CHANGE, Network.MAINNET);
+        Psbt psbtWithChange = new Psbt(MULTI_UNSIGNED_PSBT_WITH_CHANGE, Network.MAINNET);
 
         Psbt psbtWithoutChangeSigned = psbtWithoutChange.signed(keySigner1).signed(keySigner2);
         Psbt psbtWithoutChangeFinalized = psbtWithoutChangeSigned.finalized();
@@ -630,17 +630,17 @@ public class PsbtTest {
     public void testIsChange() {
         HDKey us = new HDKey(MASTER_1);
         HDKey cosigner = new HDKey(MASTER_2);
-        Psbt psbt = Psbt.newInstance(MULTI_UNSIGNED_PSBT_WITH_CHANGE, Network.MAINNET);
+        Psbt psbt = new Psbt(MULTI_UNSIGNED_PSBT_WITH_CHANGE, Network.MAINNET);
         assertTrue(psbt.getOutputs()[0].isChange(us, psbt.getInputs(), cosigner, 2));
         assertFalse(psbt.getOutputs()[1].isChange(us, psbt.getInputs(), cosigner, 2));
 
         // Test maximum permitted change index
-        psbt = Psbt.newInstance(CHANGE_INDEX_999999, Network.MAINNET);
+        psbt = new Psbt(CHANGE_INDEX_999999, Network.MAINNET);
         assertTrue(psbt.getOutputs()[0].isChange(us, psbt.getInputs(), cosigner, 2));
         assertFalse(psbt.getOutputs()[1].isChange(us, psbt.getInputs(), cosigner, 2));
 
         // Test out of bounds change index
-        psbt = Psbt.newInstance(CHANGE_INDEX_1000000, Network.MAINNET);
+        psbt = new Psbt(CHANGE_INDEX_1000000, Network.MAINNET);
         assertFalse(psbt.getOutputs()[0].isChange(us, psbt.getInputs(), cosigner, 2));
         assertFalse(psbt.getOutputs()[1].isChange(us, psbt.getInputs(), cosigner, 2));
     }
@@ -653,7 +653,7 @@ public class PsbtTest {
                 "G1oBPMCfKpkVbJtUHRaqRdCb6X6o1e9PQTVK88a",
                 hex2Bytes("bd16bee5"));
 
-        Psbt psbt = Psbt.newInstance(MULTI_UNSIGNED_PSBT_WITH_CHANGE, Network.MAINNET);
+        Psbt psbt = new Psbt(MULTI_UNSIGNED_PSBT_WITH_CHANGE, Network.MAINNET);
         assertTrue(psbt.getOutputs()[0].isChange(us, psbt.getInputs(), cosigner, 2));
         assertFalse(psbt.getOutputs()[1].isChange(us, psbt.getInputs(), cosigner, 2));
     }
@@ -668,14 +668,14 @@ public class PsbtTest {
                 "xpub6DwQ4gBCmJZM3TaKogP41tpjuEwnMH2nWEi3PFev37LfsWPvjZrh1GfAG8xvoDYMPWGK" +
                 "G1oBPMCfKpkVbJtUHRaqRdCb6X6o1e9PQTVK88a",
                 hex2Bytes("bd16bee5"));
-        Psbt psbt = Psbt.newInstance(MULTI_UNSIGNED_PSBT_WITH_CHANGE, Network.MAINNET);
+        Psbt psbt = new Psbt(MULTI_UNSIGNED_PSBT_WITH_CHANGE, Network.MAINNET);
         assertTrue(psbt.getOutputs()[0].isChange(us, psbt.getInputs(), cosigner, 2));
         assertFalse(psbt.getOutputs()[1].isChange(us, psbt.getInputs(), cosigner, 2));
     }
 
     @Test
     public void testGetTransactionFee() {
-        Psbt psbt = Psbt.newInstance(MULTI_UNSIGNED_PSBT_WITH_CHANGE, Network.MAINNET);
+        Psbt psbt = new Psbt(MULTI_UNSIGNED_PSBT_WITH_CHANGE, Network.MAINNET);
         assertEquals(181L, (long) psbt.getFee());
     }
 

@@ -298,7 +298,7 @@ class PsbtTest {
 
     private fun testInvalidPsbt(psbt: String) {
         assertThrows<PsbtException>() {
-            Psbt.newInstance(
+            Psbt(
                 psbt,
                 Network.TESTNET
             )
@@ -317,14 +317,14 @@ class PsbtTest {
 
     @Test
     fun testParseBase64() {
-        val psbt = Psbt.newInstance(VALID_PSBT, Network.TESTNET)
+        val psbt = Psbt(VALID_PSBT, Network.TESTNET)
         assertEquals(VALID_PSBT, psbt.description)
     }
 
     @Test
     fun testParseBinary() {
         val data = base642Bytes(VALID_PSBT);
-        val psbt = Psbt.newInstance(data, Network.TESTNET)
+        val psbt = Psbt(data, Network.TESTNET)
         assertEquals(VALID_PSBT, psbt.description)
         assertArrayEquals(data, psbt.data)
     }
@@ -336,20 +336,20 @@ class PsbtTest {
 
     @Test
     fun testComplete() {
-        val incompletePsbt = Psbt.newInstance(VALID_PSBT, Network.TESTNET)
-        val completePsbt = Psbt.newInstance(FINALIZED_PSBT, Network.TESTNET)
+        val incompletePsbt = Psbt(VALID_PSBT, Network.TESTNET)
+        val completePsbt = Psbt(FINALIZED_PSBT, Network.TESTNET)
         assertFalse(incompletePsbt.isComplete)
-        assertFalse(Psbt.newInstance(UNSIGNED_PSBT, Network.TESTNET).isComplete)
-        assertFalse(Psbt.newInstance(SIGNED_PSBT_0_2, Network.TESTNET).isComplete)
+        assertFalse(Psbt(UNSIGNED_PSBT, Network.TESTNET).isComplete)
+        assertFalse(Psbt(SIGNED_PSBT_0_2, Network.TESTNET).isComplete)
         assertTrue(completePsbt.isComplete)
     }
 
     @Test
     fun testExtractTransaction() {
-        val incompletePsbt = Psbt.newInstance(VALID_PSBT, Network.TESTNET)
+        val incompletePsbt = Psbt(VALID_PSBT, Network.TESTNET)
         assertNull(incompletePsbt.transactionFinal)
 
-        val completePsbt = Psbt.newInstance(FINALIZED_PSBT, Network.TESTNET)
+        val completePsbt = Psbt(FINALIZED_PSBT, Network.TESTNET)
         assertNotNull(completePsbt.transactionFinal)
         assertEquals(
             "0200000000010258e87a21b56daf0c23be8e7070456c336f7cbaa5c8757924f545887bb2ab" +
@@ -380,11 +380,11 @@ class PsbtTest {
         val privKey2 = Key(WIF_2, Network.TESTNET)
         val privKey3 = Key(WIF_3, Network.TESTNET)
 
-        val psbt1 = Psbt.newInstance(UNSIGNED_PSBT, Network.TESTNET)
-        val psbt2 = Psbt.newInstance(UNSIGNED_PSBT, Network.TESTNET)
+        val psbt1 = Psbt(UNSIGNED_PSBT, Network.TESTNET)
+        val psbt2 = Psbt(UNSIGNED_PSBT, Network.TESTNET)
 
-        val expectedPsbt02 = Psbt.newInstance(SIGNED_PSBT_0_2, Network.TESTNET)
-        val expectedPsbt13 = Psbt.newInstance(SIGNED_PSBT_1_3, Network.TESTNET)
+        val expectedPsbt02 = Psbt(SIGNED_PSBT_0_2, Network.TESTNET)
+        val expectedPsbt13 = Psbt(SIGNED_PSBT_1_3, Network.TESTNET)
 
         val p102 = psbt1.signed(privKey0).signed(privKey2)
         assertEquals(expectedPsbt02.description, p102.description)
@@ -395,13 +395,13 @@ class PsbtTest {
 
     @Test
     fun testInputs() {
-        val psbt = Psbt.newInstance(UNSIGNED_PSBT, Network.TESTNET)
+        val psbt = Psbt(UNSIGNED_PSBT, Network.TESTNET)
         assertEquals(2, psbt.inputs.size)
     }
 
     @Test
     fun testOutput() {
-        val psbt = Psbt.newInstance(UNSIGNED_PSBT, Network.TESTNET)
+        val psbt = Psbt(UNSIGNED_PSBT, Network.TESTNET)
         assertEquals(2, psbt.outputs.size)
     }
 
@@ -413,7 +413,7 @@ class PsbtTest {
         val expectedOrigin3 = KeyOrigin(FINGERPRINT, PATH_3)
         val expectedOrigin4 = KeyOrigin(FINGERPRINT, PATH_4)
         val expectedOrigin5 = KeyOrigin(FINGERPRINT, PATH_5)
-        val psbt = Psbt.newInstance(UNSIGNED_PSBT, Network.TESTNET)
+        val psbt = Psbt(UNSIGNED_PSBT, Network.TESTNET)
 
         assertEquals(2, psbt.inputs.size)
         val inOrigin0 = psbt.inputs[0].originMap
@@ -437,7 +437,7 @@ class PsbtTest {
     @Test
     fun testCanSign() {
         val hdKey = HDKey(MASTER_KEY_XPRIV)
-        val psbt = Psbt.newInstance(UNSIGNED_PSBT, Network.TESTNET)
+        val psbt = Psbt(UNSIGNED_PSBT, Network.TESTNET)
         for (input in psbt.inputs) {
             assertTrue(input.canSign(hdKey))
         }
@@ -445,15 +445,15 @@ class PsbtTest {
 
     @Test
     fun testFinalize() {
-        val psbt = Psbt.newInstance(SIGNED_PSBT, Network.TESTNET)
-        val expected = Psbt.newInstance(FINALIZED_PSBT, Network.TESTNET)
+        val psbt = Psbt(SIGNED_PSBT, Network.TESTNET)
+        val expected = Psbt(FINALIZED_PSBT, Network.TESTNET)
         val finalized = psbt.finalized()
         assertEquals(expected, finalized)
     }
 
     @Test
     fun testSignWithHDKey() {
-        val psbt = Psbt.newInstance(UNSIGNED_PSBT, Network.TESTNET)
+        val psbt = Psbt(UNSIGNED_PSBT, Network.TESTNET)
         val masterKey = HDKey(MASTER_KEY_XPRIV)
         val signed = psbt.signed(masterKey)
         val finalized = signed.finalized()
@@ -467,7 +467,7 @@ class PsbtTest {
                     "LQoz4q845taC9Q28XutbptxAmg7q8QPkjvTL4oi",
             hex2Bytes("3442193e")
         )
-        val psbt = Psbt.newInstance(MULTI_UNSIGNED_PSBT_WITH_CHANGE, Network.MAINNET)
+        val psbt = Psbt(MULTI_UNSIGNED_PSBT_WITH_CHANGE, Network.MAINNET)
         for (input in psbt.inputs) {
             assertTrue(input.canSign(us))
         }
@@ -478,8 +478,8 @@ class PsbtTest {
         val keySigner1 = HDKey(MASTER_1)
         val keySigner2 = HDKey(MASTER_2)
         val psbtWithoutChange =
-            Psbt.newInstance(MULTI_UNSIGNED_PSBT_WITHOUT_CHANGE, Network.MAINNET)
-        val psbtWithChange = Psbt.newInstance(MULTI_UNSIGNED_PSBT_WITH_CHANGE, Network.MAINNET)
+            Psbt(MULTI_UNSIGNED_PSBT_WITHOUT_CHANGE, Network.MAINNET)
+        val psbtWithChange = Psbt(MULTI_UNSIGNED_PSBT_WITH_CHANGE, Network.MAINNET)
 
         val psbtWithoutChangeSigned = psbtWithoutChange.signed(keySigner1).signed(keySigner2)
         val psbtWithoutChangeFinalized = psbtWithoutChangeSigned.finalized()
@@ -520,17 +520,17 @@ class PsbtTest {
     fun testIsChange() {
         val us = HDKey(MASTER_1)
         val cosigner = HDKey(MASTER_2)
-        var psbt = Psbt.newInstance(MULTI_UNSIGNED_PSBT_WITH_CHANGE, Network.MAINNET)
+        var psbt = Psbt(MULTI_UNSIGNED_PSBT_WITH_CHANGE, Network.MAINNET)
         assertTrue(psbt.outputs[0].isChange(us, psbt.inputs, cosigner, 2))
         assertFalse(psbt.outputs[1].isChange(us, psbt.inputs, cosigner, 2))
 
         // Test maximum permitted change index
-        psbt = Psbt.newInstance(CHANGE_INDEX_999999, Network.MAINNET)
+        psbt = Psbt(CHANGE_INDEX_999999, Network.MAINNET)
         assertTrue(psbt.outputs[0].isChange(us, psbt.inputs, cosigner, 2))
         assertFalse(psbt.outputs[1].isChange(us, psbt.inputs, cosigner, 2))
 
         // Test out of bounds change index
-        psbt = Psbt.newInstance(CHANGE_INDEX_1000000, Network.MAINNET)
+        psbt = Psbt(CHANGE_INDEX_1000000, Network.MAINNET)
         assertFalse(psbt.outputs[0].isChange(us, psbt.inputs, cosigner, 2))
         assertFalse(psbt.outputs[1].isChange(us, psbt.inputs, cosigner, 2))
     }
@@ -544,7 +544,7 @@ class PsbtTest {
             hex2Bytes("bd16bee5")
         )
 
-        val psbt = Psbt.newInstance(MULTI_UNSIGNED_PSBT_WITH_CHANGE, Network.MAINNET)
+        val psbt = Psbt(MULTI_UNSIGNED_PSBT_WITH_CHANGE, Network.MAINNET)
         assertTrue(psbt.outputs[0].isChange(us, psbt.inputs, cosigner, 2))
         assertFalse(psbt.outputs[1].isChange(us, psbt.inputs, cosigner, 2))
     }
@@ -559,14 +559,14 @@ class PsbtTest {
             "xpub6DwQ4gBCmJZM3TaKogP41tpjuEwnMH2nWEi3PFev37LfsWPvjZrh1GfAG8xvoDYMPWGKG1oBPMCfKpkVbJtUHRaqRdCb6X6o1e9PQTVK88a",
             hex2Bytes("bd16bee5")
         )
-        val psbt = Psbt.newInstance(MULTI_UNSIGNED_PSBT_WITH_CHANGE, Network.MAINNET)
+        val psbt = Psbt(MULTI_UNSIGNED_PSBT_WITH_CHANGE, Network.MAINNET)
         assertTrue(psbt.outputs[0].isChange(us, psbt.inputs, cosigner, 2))
         assertFalse(psbt.outputs[1].isChange(us, psbt.inputs, cosigner, 2))
     }
 
     @Test
     fun testGetTransactionFee() {
-        val psbt = Psbt.newInstance(MULTI_UNSIGNED_PSBT_WITH_CHANGE, Network.MAINNET)
+        val psbt = Psbt(MULTI_UNSIGNED_PSBT_WITH_CHANGE, Network.MAINNET)
         assertEquals(181L, psbt.fee as Long)
     }
 }

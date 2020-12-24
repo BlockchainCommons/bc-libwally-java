@@ -23,4 +23,10 @@ class PsbtJni {
 
     static native WallyPsbt wally_psbt_finalize(WallyPsbt psbt);
 
+    static native boolean wally_psbt_is_finalized(WallyPsbt psbt);
+
+    static native WallyPsbt wally_psbt_from_base64(String base64);
+
+    static native String wally_psbt_to_base64(WallyPsbt psbt, long flags);
+
 }
