@@ -30,7 +30,7 @@ public class Bip39Mnemonic {
 
         String[] words = bip39_mnemonic_from_bytes(null, entropy.getData()).split(" ");
         if (!isValid(words))
-            throw new Bip39Exception("invalid words");
+            throw new Bip39Exception("Invalid words");
         this.words = words;
     }
 
@@ -40,7 +40,7 @@ public class Bip39Mnemonic {
 
     public Bip39Mnemonic(String[] words) {
         if (!isValid(words))
-            throw new Bip39Exception("invalid words");
+            throw new Bip39Exception("Invalid words");
         this.words = words;
     }
 
@@ -83,7 +83,7 @@ public class Bip39Mnemonic {
         int[] written = new int[1];
 
         if (bip39_mnemonic_to_bytes(null, mnemonic, output, written) != WALLY_OK) {
-            throw new Bip39Exception("could not get entropy");
+            throw new Bip39Exception("Could not get entropy");
         }
 
         return new Bip39Entropy(output, written[0]);
@@ -95,7 +95,7 @@ public class Bip39Mnemonic {
         int[] written = new int[1];
 
         if (bip39_mnemonic_to_seed(mnemonic, passphrase, output, written) != WALLY_OK) {
-            throw new Bip39Exception("could not get seed hex");
+            throw new Bip39Exception("Could not get seed hex");
         }
 
         return new Bip39Seed(output, written[0]);

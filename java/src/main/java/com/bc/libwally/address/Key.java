@@ -42,7 +42,7 @@ public class Key {
 
     public Key(byte[] data, Network network, boolean compressed) {
         if (data == null || data.length != EC_PRIVATE_KEY_LEN)
-            throw new AddressException("invalid data");
+            throw new AddressException("Invalid data");
         this.data = data;
         this.network = network;
         this.compressed = compressed;

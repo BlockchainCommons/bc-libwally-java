@@ -45,7 +45,7 @@ public class Psbt {
 
     private Psbt(WallyPsbt rawPsbt, Network network) {
         if (rawPsbt.getTx() == null) {
-            throw new PsbtException("psbt tx is NULL");
+            throw new PsbtException("rawPsbt tx is NULL");
         }
 
         this.network = network;
@@ -87,7 +87,7 @@ public class Psbt {
 
     public Transaction getTransaction() {
         if (rawPsbt.getTx() == null) {
-            throw new PsbtException("psbt tx is NULL");
+            throw new PsbtException("rawPsbt tx is NULL");
         }
         return new Transaction(rawPsbt.getTx());
     }
@@ -95,7 +95,7 @@ public class Psbt {
     public Long getFee() {
         Long valueOut = getTransaction().getTotalOut();
         if (valueOut == null) {
-            throw new PsbtException("psbt tx total out is NULL");
+            throw new PsbtException("PSBT tx total out is NULL");
         }
 
         Long tally = 0L;
@@ -108,7 +108,7 @@ public class Psbt {
         }
 
         if (tally < valueOut) {
-            throw new PsbtException("invalid total in");
+            throw new PsbtException("Invalid total in");
         }
 
         return tally - valueOut;

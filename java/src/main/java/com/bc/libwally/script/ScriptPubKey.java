@@ -54,7 +54,7 @@ public class ScriptPubKey implements Cloneable {
 
     public ScriptPubKey(PubKey[] pubKeys, long threshold, boolean bip67) {
         if (pubKeys == null || pubKeys.length == 0)
-            throw new ScriptException("invalid pubKeys");
+            throw new ScriptException("Invalid pubKeys");
         int pubKeysBytesLen = EC_PUBLIC_KEY_LEN * pubKeys.length;
         byte[] pubKeysBytes = new byte[pubKeysBytesLen];
         int offset = 0;
@@ -106,7 +106,7 @@ public class ScriptPubKey implements Cloneable {
             case WALLY_SCRIPT_TYPE_MULTISIG:
                 return MULTI_SIG;
             default:
-                throw new ScriptException("invalid script type");
+                throw new ScriptException("Invalid script type");
         }
     }
 

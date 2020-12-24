@@ -45,7 +45,7 @@ public class HDKey {
             if (this.masterFingerprint == null) {
                 this.masterFingerprint = fingerprint;
             } else if (Arrays.equals(this.masterFingerprint, fingerprint)) {
-                throw new Bip32Exception("invalid masterFingerprint");
+                throw new Bip32Exception("Invalid masterFingerprint");
             }
         }
     }

@@ -16,7 +16,7 @@ public class Bip39Entropy {
 
     public Bip39Entropy(byte[] data, Integer len) {
         if (data == null || data.length == 0)
-            throw new Bip39Exception("invalid data");
+            throw new Bip39Exception("Invalid data");
         this.data = len != null ? slice(data, len) : data;
     }
 

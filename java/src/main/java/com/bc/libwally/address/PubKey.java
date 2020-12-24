@@ -19,7 +19,7 @@ public class PubKey {
 
     public PubKey(byte[] data, Network network, boolean compressed) {
         if (data.length != (compressed ? EC_PUBLIC_KEY_LEN : EC_PUBLIC_KEY_UNCOMPRESSED_LEN)) {
-            throw new AddressException("invalid data");
+            throw new AddressException("Invalid data");
         }
 
         this.data = data;

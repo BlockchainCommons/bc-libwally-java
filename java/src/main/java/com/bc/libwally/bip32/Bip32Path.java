@@ -19,7 +19,7 @@ public class Bip32Path {
 
     public Bip32Path(long[] rawPath, boolean relative) {
         if (rawPath == null || rawPath.length == 0)
-            throw new Bip32Exception("invalid raw path");
+            throw new Bip32Exception("Invalid raw path");
         Bip32Derivation[] components = new Bip32Derivation[rawPath.length];
         for (int i = 0; i < rawPath.length; i++) {
             long index = rawPath[i];
@@ -37,7 +37,7 @@ public class Bip32Path {
 
     public Bip32Path(Bip32Derivation[] components, boolean relative) {
         if (components == null || components.length == 0)
-            throw new Bip32Exception("invalid components");
+            throw new Bip32Exception("Invalid components");
 
         long[] rawPath = new long[components.length];
 
@@ -77,7 +77,7 @@ public class Bip32Path {
 
     public Bip32Path(String path) {
         if (path == null || path.isEmpty())
-            throw new Bip32Exception("invalid path");
+            throw new Bip32Exception("Invalid path");
 
         boolean relative = !path.startsWith("m/");
         String[] rawComponents = path.split("/");
@@ -106,11 +106,11 @@ public class Bip32Path {
                 if (index != null) {
                     components.add(Bip32Derivation.newHardened(index));
                 } else {
-                    throw new Bip32Exception("invalid path");
+                    throw new Bip32Exception("Invalid path");
                 }
 
             } else {
-                throw new Bip32Exception("invalid path");
+                throw new Bip32Exception("Invalid path");
             }
         }
 

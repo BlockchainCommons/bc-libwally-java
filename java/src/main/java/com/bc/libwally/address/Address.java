@@ -69,7 +69,7 @@ public class Address {
 
 
         if (ret != WALLY_OK) {
-            throw new AddressException("could not construct address");
+            throw new AddressException("Could not construct address");
         }
 
         this.scriptPubKey = new ScriptPubKey(bytes, written[0]);
@@ -90,7 +90,7 @@ public class Address {
                 addrType = WALLY_ADDRESS_TYPE_P2WPKH;
                 break;
             default:
-                throw new AddressException("unknown address type");
+                throw new AddressException("Unknown address type");
         }
 
         if (addrType == WALLY_ADDRESS_TYPE_P2PKH || addrType == WALLY_ADDRESS_TYPE_P2SH_P2WPKH) {
@@ -135,7 +135,7 @@ public class Address {
                                                             getAddrFamily(this.network));
                 break;
             default:
-                throw new AddressException("could not construct address");
+                throw new AddressException("Could not construct address");
         }
     }
 
