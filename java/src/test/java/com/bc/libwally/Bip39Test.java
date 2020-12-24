@@ -93,19 +93,19 @@ public class Bip39Test {
         Bip39Mnemonic mnemonic = new Bip39Mnemonic(validMnemonic);
         assertEquals(
                 "c55257c360c07c72029aebc1b53c05ed0362ada38ead3e3e9efa3708e53495531f09a6987599d18264c1e1c92f2cf141630c7a3c4ab7c81b2f001698e7463b04",
-                mnemonic.getSeedHex("TREZOR").getHexData());
+                mnemonic.getSeed("TREZOR").getHexData());
         assertEquals(
                 "5eb00bbddcf069084889a8ab9155568165f5c453ccb85e70811aaed6f6da5fc19a5ac40b389cd370d086206dec8aa6c43daea6690f20ad3d8d48b2d2ce9e38e4",
-                mnemonic.getSeedHex().getHexData());
+                mnemonic.getSeed().getHexData());
         assertEquals(
                 "5eb00bbddcf069084889a8ab9155568165f5c453ccb85e70811aaed6f6da5fc19a5ac40b389cd370d086206dec8aa6c43daea6690f20ad3d8d48b2d2ce9e38e4",
-                mnemonic.getSeedHex("").getHexData());
+                mnemonic.getSeed("").getHexData());
     }
 
     @Test
     public void testSeedLosslessStringConvertible() {
         Bip39Mnemonic mnemonic = new Bip39Mnemonic(validMnemonic);
-        Bip39Seed expectedSeed = mnemonic.getSeedHex("TREZOR");
+        Bip39Seed expectedSeed = mnemonic.getSeed("TREZOR");
         Bip39Seed actualSeed = new Bip39Seed(
                 "c55257c360c07c72029aebc1b53c05ed0362ada38ead3e3e9efa3708e53495531f09a6987599d18264c1e1c92f2cf141630c7a3c4ab7c81b2f001698e7463b04");
         assertEquals(expectedSeed, actualSeed);

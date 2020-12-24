@@ -88,22 +88,22 @@ class Bip39Test {
         val mnemonic = Bip39Mnemonic(validMnemonic)
         assertEquals(
             "c55257c360c07c72029aebc1b53c05ed0362ada38ead3e3e9efa3708e53495531f09a6987599d18264c1e1c92f2cf141630c7a3c4ab7c81b2f001698e7463b04",
-            mnemonic.getSeedHex("TREZOR").hexData
+            mnemonic.getSeed("TREZOR").hexData
         )
         assertEquals(
             "5eb00bbddcf069084889a8ab9155568165f5c453ccb85e70811aaed6f6da5fc19a5ac40b389cd370d086206dec8aa6c43daea6690f20ad3d8d48b2d2ce9e38e4",
-            mnemonic.seedHex.hexData
+            mnemonic.seed.hexData
         )
         assertEquals(
             "5eb00bbddcf069084889a8ab9155568165f5c453ccb85e70811aaed6f6da5fc19a5ac40b389cd370d086206dec8aa6c43daea6690f20ad3d8d48b2d2ce9e38e4",
-            mnemonic.getSeedHex("").hexData
+            mnemonic.getSeed("").hexData
         )
     }
 
     @Test
     fun testSeedLosslessStringConvertible() {
         val mnemonic = Bip39Mnemonic(validMnemonic)
-        val expectedSeed: Bip39Seed = mnemonic.getSeedHex("TREZOR")
+        val expectedSeed: Bip39Seed = mnemonic.getSeed("TREZOR")
         val actualSeed = Bip39Seed(
             "c55257c360c07c72029aebc1b53c05ed0362ada38ead3e3e9efa3708e53495531f09a6987599d18264c1e1c92f2cf141630c7a3c4ab7c81b2f001698e7463b04"
         )

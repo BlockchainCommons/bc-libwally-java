@@ -89,7 +89,7 @@ public class Bip39Mnemonic {
         return new Bip39Entropy(output, written[0]);
     }
 
-    public Bip39Seed getSeedHex(String passphrase) {
+    public Bip39Seed getSeed(String passphrase) {
         String mnemonic = getMnemonic();
         byte[] output = new byte[BIP39_SEED_LEN_512];
         int[] written = new int[1];
@@ -101,8 +101,8 @@ public class Bip39Mnemonic {
         return new Bip39Seed(output, written[0]);
     }
 
-    public Bip39Seed getSeedHex() {
-        return getSeedHex("");
+    public Bip39Seed getSeed() {
+        return getSeed("");
     }
 
     public String getMnemonic() {
