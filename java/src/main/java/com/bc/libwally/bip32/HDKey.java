@@ -1,5 +1,6 @@
 package com.bc.libwally.bip32;
 
+import com.bc.libwally.Network;
 import com.bc.libwally.address.Key;
 import com.bc.libwally.address.PubKey;
 import com.bc.libwally.bip39.Bip39Seed;

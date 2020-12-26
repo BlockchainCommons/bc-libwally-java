@@ -2,7 +2,7 @@ package com.bc.libwally.psbt;
 
 import com.bc.libwally.address.PubKey;
 import com.bc.libwally.bip32.Bip32Path;
-import com.bc.libwally.bip32.Network;
+import com.bc.libwally.Network;
 import com.bc.libwally.psbt.raw.WallyMap;
 
 import java.nio.ByteOrder;

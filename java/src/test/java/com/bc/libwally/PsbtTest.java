@@ -4,7 +4,6 @@ import com.bc.libwally.address.Key;
 import com.bc.libwally.address.PubKey;
 import com.bc.libwally.bip32.Bip32Path;
 import com.bc.libwally.bip32.HDKey;
-import com.bc.libwally.bip32.Network;
 import com.bc.libwally.psbt.KeyOrigin;
 import com.bc.libwally.psbt.Psbt;
 import com.bc.libwally.psbt.PsbtException;

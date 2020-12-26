@@ -3,14 +3,13 @@ package com.bc.libwally.psbt;
 import com.bc.libwally.address.PubKey;
 import com.bc.libwally.bip32.Bip32Exception;
 import com.bc.libwally.bip32.HDKey;
-import com.bc.libwally.bip32.Network;
+import com.bc.libwally.Network;
 import com.bc.libwally.psbt.raw.WallyMap;
 import com.bc.libwally.psbt.raw.WallyPsbtInput;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 public class PsbtInput {
 

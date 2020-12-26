@@ -1,4 +1,4 @@
-package com.bc.libwally.bip32;
+package com.bc.libwally;
 
 public enum Network {
     MAINNET,

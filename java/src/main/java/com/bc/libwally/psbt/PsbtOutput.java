@@ -5,7 +5,7 @@ import com.bc.libwally.bip32.Bip32Derivation;
 import com.bc.libwally.bip32.Bip32Exception;
 import com.bc.libwally.bip32.Bip32Path;
 import com.bc.libwally.bip32.HDKey;
-import com.bc.libwally.bip32.Network;
+import com.bc.libwally.Network;
 import com.bc.libwally.psbt.raw.WallyPsbtOutput;
 import com.bc.libwally.script.ScriptPubKey;
 import com.bc.libwally.tx.TxOutput;

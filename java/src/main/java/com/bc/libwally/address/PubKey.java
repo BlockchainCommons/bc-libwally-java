@@ -1,6 +1,6 @@
 package com.bc.libwally.address;
 
-import com.bc.libwally.bip32.Network;
+import com.bc.libwally.Network;
 
 import java.util.Arrays;
 import java.util.Objects;

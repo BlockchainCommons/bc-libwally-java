@@ -1,7 +1,7 @@
 package com.bc.libwally.address;
 
 import com.bc.libwally.bip32.HDKey;
-import com.bc.libwally.bip32.Network;
+import com.bc.libwally.Network;
 import com.bc.libwally.script.ScriptPubKey;
 
 import java.util.Objects;

@@ -3,8 +3,6 @@ package com.bc.libwally
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.bc.libwally.address.Address
 import com.bc.libwally.address.PubKey
-import com.bc.libwally.bip32.Network
-import com.bc.libwally.core.Core
 import com.bc.libwally.core.Core.bytes2Hex
 import com.bc.libwally.core.Core.hex2Bytes
 import com.bc.libwally.crypto.CryptoConstants.EC_SIGNATURE_DER_MAX_LOW_R_LEN

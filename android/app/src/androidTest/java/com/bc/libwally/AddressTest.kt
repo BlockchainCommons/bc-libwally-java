@@ -5,7 +5,6 @@ import com.bc.libwally.address.Address
 import com.bc.libwally.address.AddressType
 import com.bc.libwally.address.Key
 import com.bc.libwally.bip32.HDKey
-import com.bc.libwally.bip32.Network
 import com.bc.libwally.core.Core
 import com.bc.libwally.script.ScriptPubKey
 import org.junit.Assert

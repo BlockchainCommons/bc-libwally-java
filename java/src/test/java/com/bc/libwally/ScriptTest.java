@@ -2,7 +2,6 @@ package com.bc.libwally;
 
 import com.bc.libwally.address.Address;
 import com.bc.libwally.address.PubKey;
-import com.bc.libwally.bip32.Network;
 import com.bc.libwally.script.ScriptPubKey;
 import com.bc.libwally.script.ScriptSig;
 import com.bc.libwally.script.ScriptSigType;
@@ -15,8 +14,8 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import static com.bc.libwally.ArrayUtils.append;
-import static com.bc.libwally.bip32.Network.MAINNET;
-import static com.bc.libwally.bip32.Network.TESTNET;
+import static com.bc.libwally.Network.MAINNET;
+import static com.bc.libwally.Network.TESTNET;
 import static com.bc.libwally.core.Core.bytes2Hex;
 import static com.bc.libwally.core.Core.hex2Bytes;
 import static com.bc.libwally.crypto.CryptoConstants.EC_SIGNATURE_DER_MAX_LOW_R_LEN;

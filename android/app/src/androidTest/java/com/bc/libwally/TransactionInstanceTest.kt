@@ -3,7 +3,6 @@ package com.bc.libwally
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.bc.libwally.address.PubKey
 import com.bc.libwally.bip32.HDKey
-import com.bc.libwally.bip32.Network
 import com.bc.libwally.script.*
 import com.bc.libwally.tx.Transaction
 import com.bc.libwally.tx.TxInput
