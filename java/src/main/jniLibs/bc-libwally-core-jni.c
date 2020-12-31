@@ -172,7 +172,7 @@ Java_com_bc_libwally_core_CoreJni_wally_1base64_1from_1bytes(JNIEnv *env,
     unsigned char *c_bytes = to_unsigned_char_array(env, bytes);
     jsize bytes_len = (*env)->GetArrayLength(env, bytes);
     size_t output_len = base64_encoded_length(bytes_len);
-    char *output = (char *) calloc(bytes_len, sizeof(char));
+    char *output = (char *) calloc(output_len, sizeof(char));
 
     size_t written = base64_encode(output, output_len, (char *) c_bytes, bytes_len);
     if (written == 0 || written > output_len) {
@@ -182,8 +182,9 @@ Java_com_bc_libwally_core_CoreJni_wally_1base64_1from_1bytes(JNIEnv *env,
         return NULL;
     }
 
-    char *c_result = (char *) calloc(written, sizeof(char));
-    memcpy(c_result, output, written);
+    char *c_result = (char *) calloc(written + 1, sizeof(char));
+    strncpy(c_result, output, written);
+    c_result[written] = 0;
 
     jstring result = (*env)->NewStringUTF(env, c_result);
 
