@@ -2,7 +2,10 @@
 
 set -e
 
-ROOT_DIR=$(cd ..; pwd)
+ROOT_DIR=$(
+  cd ..
+  pwd
+)
 
 source scripts/helper.sh
 source "$ROOT_DIR"/deps/libwally-core/tools/android_helpers.sh
@@ -16,7 +19,12 @@ USEROPTS="--disable-swig-java --enable-debug"
 
 pushd "$ROOT_DIR/deps/libwally-core"
 
-ROOT_DIR=$(cd ../..; pwd)
+ROOT_DIR=$(
+  cd ../..
+  pwd
+)
+
+export LDFLAGS="$LDFLAGS -avoid-version"
 
 ./tools/cleanup.sh
 ./tools/autogen.sh
@@ -34,17 +42,17 @@ for ARCH in $ARCH_LIST; do
 
   # strip libwally-core binary file
   LIBWALLY_CORE_FILE=libwallycore.so
-  LIBWALLY_CORE_DIR="$PWD/release/lib/$ARCH"
-  mkdir -p "$LIBWALLY_CORE_DIR"
+  LIBWALLY_CORE_DIR="$PWD/src/.libs"
 
   STRIP_TOOL=$(android_get_build_tool "$ARCH" "$TOOLCHAIN_DIR" $API "strip")
-  $STRIP_TOOL -o "$LIBWALLY_CORE_DIR/$LIBWALLY_CORE_FILE" "$PWD/src/.libs/$LIBWALLY_CORE_FILE"
+  $STRIP_TOOL -o "$LIBWALLY_CORE_DIR/$LIBWALLY_CORE_FILE" "$LIBWALLY_CORE_DIR/$LIBWALLY_CORE_FILE"
 
   # copy binany files
   echo "Copying libwally-core binary file..."
   OUT_DIR=$ROOT_DIR/android/app/src/main/jniLibs/$ARCH
   mkdir -p "$OUT_DIR"
-  find "$LIBWALLY_CORE_DIR" -name "$LIBWALLY_CORE_FILE*" -exec cp '{}' "$OUT_DIR" ';'
+
+  cp "$LIBWALLY_CORE_DIR/$LIBWALLY_CORE_FILE" "$OUT_DIR"
 
   echo "Done! $OUT_DIR/$LIBWALLY_CORE_FILE"
 
