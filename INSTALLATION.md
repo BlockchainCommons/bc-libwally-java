@@ -7,7 +7,9 @@ If you want to do it manually by yourself, make sure all of following dependenci
 
 [Adopt Open JDK 1.8](https://github.com/AdoptOpenJDK/openjdk8-binaries/releases) is recommended for both MacOS and Linux.
 
-### Linux (Well tested on Ubuntu 16.04 and above)
+### Linux
+> Well tested on Ubuntu 16.04, 18.04 and Debian 8,9,10.
+
 > Following packages can be installed via `apt-get`
 
 - automake
