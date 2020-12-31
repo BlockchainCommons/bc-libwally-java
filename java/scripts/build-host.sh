@@ -2,22 +2,24 @@
 
 set -e
 
+ROOT_DIR=$(cd ..; pwd)
+
 source scripts/helper.sh
 
 # Set env var
 . ./scripts/setenv.sh
 
 # Install libwally-core binary
-pushd ../deps/libwally-core
+pushd "$ROOT_DIR/deps/libwally-core"
 ./tools/cleanup.sh
 ./tools/autogen.sh
 ./configure --disable-swig-java --enable-debug
-make install
+make
 popd
 
 # Copy binary file
 echo "Copying libwally-core binary file..."
-LIBWALLY_CORE_DIR=../deps/libwally-core/src/.libs
+LIBWALLY_CORE_DIR=$ROOT_DIR/deps/libwally-core/src/.libs
 LIBWALLY_CORE_FILE=libwallycore.so
 OUT_DIR=src/main/libs
 mkdir -p "$OUT_DIR"

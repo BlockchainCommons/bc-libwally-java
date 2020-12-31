@@ -2,8 +2,10 @@
 
 set -e
 
+ROOT_DIR=$(cd ..; pwd)
+
 source scripts/helper.sh
-source ../deps/libwally-core/tools/android_helpers.sh
+source "$ROOT_DIR"/deps/libwally-core/tools/android_helpers.sh
 
 # Set env var
 . ./scripts/setenv.sh
@@ -12,7 +14,9 @@ ARCH_LIST=$(android_get_arch_list)
 TOOLCHAIN_DIR=$(android_get_build_tools_dir)
 USEROPTS="--disable-swig-java --enable-debug"
 
-pushd ../deps/libwally-core
+pushd "$ROOT_DIR/deps/libwally-core"
+
+ROOT_DIR=$(cd ../..; pwd)
 
 ./tools/cleanup.sh
 ./tools/autogen.sh
@@ -38,7 +42,7 @@ for ARCH in $ARCH_LIST; do
 
   # copy binany files
   echo "Copying libwally-core binary file..."
-  OUT_DIR=../../android/app/src/main/jniLibs/$ARCH
+  OUT_DIR=$ROOT_DIR/android/app/src/main/jniLibs/$ARCH
   mkdir -p "$OUT_DIR"
   find "$LIBWALLY_CORE_DIR" -name "$LIBWALLY_CORE_FILE*" -exec cp '{}' "$OUT_DIR" ';'
 
