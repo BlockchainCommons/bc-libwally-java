@@ -2,12 +2,15 @@
 
 set -e
 
-ROOT_DIR=$(cd ..; pwd)
-
 source scripts/helper.sh
 
-# Set env var
-. ./scripts/setenv.sh
+echo "${JAVA_HOME:?}"
+echo "${CC:?}"
+
+ROOT_DIR=$(
+  cd ..
+  pwd
+)
 
 # Install libwally-core binary
 pushd "$ROOT_DIR/deps/libwally-core"

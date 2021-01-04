@@ -4,8 +4,8 @@ set -e
 
 source scripts/helper.sh
 
-# Set env var
-. ./scripts/setenv.sh
+echo "${JAVA_HOME:?}"
+echo "${CC:?}"
 
 OUT_DIR=src/main/libs
 LIBWALLY_CORE_FILE=libwallycore.so
