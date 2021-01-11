@@ -103,5 +103,6 @@ output.json
 android/app/src/main/jniLibs
 java/src/main/libs
 local.properties
+**/log
 
 # End of Specific for project
