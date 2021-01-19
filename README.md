@@ -1,10 +1,15 @@
 # Blockchain Commons Libwally Java library
 
+### _by [Hiếu Phạm](https://github.com/jollyjoker992) and [Christopher Allen](https://github.com/ChristopherA)_
+* <img src="https://github.com/BlockchainCommons/crypto-commons/blob/master/images/logos/crypto-commons-super-simple.png" width=16 valign="bottom">&nbsp;&nbsp; ***part of the [crypto commons](https://github.com/BlockchainCommons/crypto-commons/blob/master/README.md) technology family***
+
 Opinionated Java wrapper around [LibWally](https://github.com/ElementsProject/libwally-core), a collection of useful primitives for cryptocurrency wallets.
 
-## Status — Work-in-Progress
+## Status — Early Alpha
 
-` Blockchain Commons Libwally Java library`  is an early Work-In-Progress.
+` Blockchain Commons Libwally Java library`  is an early Alpha.
+
+In particular, it needs more security reviews, especially for issues that might arise from writing Java wrappers around C or C++ code. We have concerns that we are losing type checking and that there may be other issues; these must be resolved prior to even a full Alpha release.
 
 ## Usage Instructions
 Derive address from a seed
