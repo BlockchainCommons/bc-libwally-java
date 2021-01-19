@@ -1,0 +1,4 @@
+rootProject.name = "bc-libwally-android"
+include ":app"
+include ":bc-libwally-java"
+project(":bc-libwally-java").projectDir = file("../java")
