@@ -1,5 +1,9 @@
 #!/bin/bash
 
+set -e
+
+CMD_LINE_DIR=cmdline-tools/bin
+
 check_dep() {
   DEP=$1
   echo "$DEP"
@@ -45,21 +49,50 @@ install_java() {
   rm -f "$FILE"
 }
 
-install_ndk() {
-  NDK_VERSION=$1
-  FILE="android-ndk-$NDK_VERSION-linux-x86_64.zip"
-  if is_osx; then
-    FILE="android-ndk-$NDK_VERSION-darwin-x86_64.zip"
+check_ndk() {
+  SDK_DIR=$1
+  NDK_VERSION=$2
+  NDK_DIR="$SDK_DIR"/ndk/"$NDK_VERSION"
+
+  if [ -f "$NDK_DIR" ]; then
+    echo "$NDK_DIR"
   fi
-  echo "Downloading ${FILE}..." >&2
-  wget -O "$FILE" -q "https://dl.google.com/android/repository/$FILE"
-  echo "Extracting ${FILE}..." >&2
-  unzip "$FILE" >/dev/null
-  rm -f "$FILE"
 }
 
-check_ndk_path() {
-  echo "Checking NDK path..." >&2
+install_cmdline_tool() {
+  FILE=commandlinetools-linux-6858069_latest.zip
+  if is_osx; then
+    FILE=commandlinetools-mac-6858069_latest.zip
+  fi
+  wget -O "$FILE" -q "https://dl.google.com/android/repository/$FILE"
+
+  unzip $FILE >/dev/null
+  rm -f $FILE
+}
+
+install_android_ndk() {
   NDK_VERSION=$1
-  find "$HOME" -type d -name "android-ndk-$NDK_VERSION" -print -quit 2>/dev/null
+  pushd "$CMD_LINE_DIR"
+  echo y | ./sdkmanager --sdk_root="$SDK_DIR" "ndk;$NDK_VERSION"
+  popd
+}
+
+install_android_sdk() {
+  SDK_DIR=$1
+  COMPILE_SDK_VERSION=$2
+  BUILD_TOOL_VERSION=$3
+  NDK_VERSION=$4
+
+  if [ ! -f "$CMD_LINE_DIR/sdkmanager" ]; then
+    echo "Installing command line tool..."
+    install_cmdline_tool
+  fi
+
+  pushd "$CMD_LINE_DIR"
+
+  echo y | ./sdkmanager --sdk_root="$SDK_DIR" "platforms;android-$COMPILE_SDK_VERSION"
+  echo y | ./sdkmanager --sdk_root="$SDK_DIR" "build-tools;$BUILD_TOOL_VERSION"
+  echo y | ./sdkmanager --sdk_root="$SDK_DIR" "ndk;$NDK_VERSION"
+
+  popd
 }

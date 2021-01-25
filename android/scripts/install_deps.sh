@@ -4,17 +4,15 @@ set -e
 
 source scripts/helper.sh
 
+# Check and install missing dependencies
 DEPS=(automake make libtool)
-
 if is_osx; then
   DEPS+=(gnu-sed)
 else
-  DEPS+=(wget sudo clang unzip)
+  DEPS+=(wget sudo unzip)
 fi
 
 echo "Checking and installing dependencies '${DEPS[*]}'..."
-
-# Check and install missing dependencies
 if ! is_osx; then
   apt-get update
 fi
@@ -33,14 +31,25 @@ else
   echo "JDK 8 has been installed $JAVA_HOME"
 fi
 
-# Check for NDK
-NDK_VERSION="r19c"
-NDK_PATH=$(check_ndk_path $NDK_VERSION)
-if [ "$NDK_PATH" == "" ]; then
-  echo "Installing NDK..."
+# Check for Android SDK
+ANDROID_SDK_DIR=$HOME/Android
+COMPILE_SDK_VERSION=30
+BUILD_TOOL_VERSION=30.0.2
+NDK_VERSION=21.0.6113669
+
+if [[ -z $ANDROID_SDK_ROOT ]]; then
   pushd "$HOME"
-  install_ndk $NDK_VERSION
+  echo "Installing Android SDK..."
+  mkdir -p "$ANDROID_SDK_DIR"
+  install_android_sdk "$ANDROID_SDK_DIR" $COMPILE_SDK_VERSION $BUILD_TOOL_VERSION $NDK_VERSION
+  echo "Android SDK has been installed at '$ANDROID_SDK_DIR'"
   popd
 else
-  echo "NDK has been installed at $NDK_PATH"
+  echo "Android SDK has been installed at '$ANDROID_SDK_ROOT'"
+
+  if [ -z $(check_ndk "$ANDROID_SDK_ROOT" "$NDK_VERSION") ]; then
+    echo "Installing ndk..."
+    install_ndk "$NDK_VERSION"
+  fi
+
 fi

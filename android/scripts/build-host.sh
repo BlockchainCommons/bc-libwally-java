@@ -12,7 +12,6 @@ source "$ROOT_DIR"/deps/libwally-core/tools/android_helpers.sh
 
 echo "${JAVA_HOME:?}"
 echo "${ANDROID_NDK:?}"
-echo "${CC:?}"
 
 ARCH_LIST=$(android_get_arch_list)
 TOOLCHAIN_DIR=$(android_get_build_tools_dir)
