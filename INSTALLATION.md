@@ -16,7 +16,7 @@ If you want to do it manually by yourself, make sure all of following dependenci
 - automake
 - make
 - libtool
-- clang
+- clang (Build for java only)
 
 ### MacOS
 > Following packages can be installed via `brew`
@@ -30,21 +30,22 @@ If you want to do it manually by yourself, make sure all of following dependenci
 > Native libraries for this project includes `libwallycore` and the other jni wrapper libraries.
 You only need to build `libwallycore` once since it's not frequently changed but you have to rebuild the jni libraries each time there is any changes in the jni codes.
 
-> For android building, `NDK_HOME="your/ndk/home"` is needed for each build command.
+> Environment variables is required for building native libraries. For android, `NDK_HOME="your/ndk/home"` is needed. For Java, you have to set`CC="your/clang"` before each build command.
+`JAVA_HOME="your/java/home"` also need for both.
 
 Build `libwallycore` only
 ```console
-$ JAVA_HOME="your/java/home" CC="clang" ./scripts/build-host.sh
+$ ./scripts/build-host.sh
 ```
 
 Build jni libraries only
 ```console
-$ JAVA_HOME="your/java/home" CC="clang" ./scripts/build-jni.sh
+$ ./scripts/build-jni.sh
 ```
 
 Run following command for building all native libraries, includes `libwallycore` and jni libraries
 ```console
-$ JAVA_HOME="your/java/home" CC="clang" ./scripts/build.sh
+$ ./scripts/build.sh
 ```
 
 ## Android
@@ -52,12 +53,12 @@ $ JAVA_HOME="your/java/home" CC="clang" ./scripts/build.sh
 
 ### Testing
 ```console
-$ ./gradlew clean connectedDebugAndroidTest
+$ ANDROID_SDK_ROOT="your/android-sdk/home" ./gradlew clean connectedDebugAndroidTest
 ```
 
 ### Bundling
 ```console
-$ ./gradlew clean assembleRelease
+$ ANDROID_SDK_ROOT="your/android-sdk/home" ./gradlew clean assembleRelease
 ```
 
 > The `app-release.aar` file would be found in `app/build/outputs/aar`. You can compile it as a library in your project.
